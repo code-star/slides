@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<title></title>
+
+<meta name="description" content="">    
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/codestar.css" id="theme">
+
+<link href='font/fira-code/fira-code.css' rel='stylesheet' type='text/css'>
+<link href='font/conduit-itc-std/conduit-itc-std.css' rel='stylesheet' type='text/css'>
+<link href="css/kbdfun.css" rel="stylesheet">
+
+<!-- For syntax highlighting -->
+  <link rel="stylesheet" href="css/dracula.css">
+
+<!-- QR Code -->
+<script src="js/qrcode.js"></script>
+
+<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+<script>
+  document.write( '<link rel="stylesheet" href="css/print/' +
+    ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + 
+    '.css" type="text/css" media="print">' );
+</script>
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<![endif]-->
+</head>
+
+<body>
+
+<img id="clouds1" src="img/clouds1.png" />
+<img id="clouds2" src="img/clouds2.png" />
+<img id="curves" src="img/curves.svg" />
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<div class="slides">
+
+<div id="logo-background"></div>
+<img id="logo" class="plain logo-still" alt="CODESTAR" src="img/logo-star.svg" />
+
+<section style="height: 100%;">
+<h1></h1>
+
+<p>
+<h4></h4>
+</p>
+<div id="credits">Built by <a href="">Showtime</a></div>
+</section>  
+
+<section>
+<h1>Follow along</h1>
+<h2>Link to the slides</h2>
+<center>
+  <div id="qrcode"></div>
+  <pre id="qrlink"></pre>
+</center>
+<script type="text/javascript">
+var url = window.location.protocol + "//" + window.location.host + window.location.pathname;
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+    text: url,
+    width: 384,
+    height: 384,
+    border: 2,
+    colorDark : "#10579E",
+    colorLight : "#ffffff"
+});
+document.getElementById("qrlink").textContent = url;
+</script>
+</section>
+
+<section>
+  <h1>Contents</h1>
+  <nav id="TOC">
+    <ul>
+    <li><a href="#usrbinenv-bash">!/usr/bin/env bash</a></li>
+    <li><a href="#echo-expanded-commands-as-they-are-executed-for-debugging">echo expanded commands as they are executed (for debugging)</a></li>
+    <li><a href="#this-is-used-to-avoid-outputting-the-repo-url-which-may-contain-a-secret-token">this is used to avoid outputting the repo URL, which may contain a secret token</a></li>
+    </ul>
+  </nav>
+</section>
+
+<section id="usrbinenv-bash" class="level1">
+<h1>!/usr/bin/env bash</h1>
+<p>set -o errexit #abort if any command fails me=$(basename “$0”)</p>
+<p>help_message=“<br />
+Usage: $me [-c FILE] [<options>] Deploy generated files to a git branch.</p>
+<p>Options:</p>
+<p>-h, –help Show this help information. -v, –verbose Increase verbosity. Useful for debugging. -e, –allow-empty Allow deployment of an empty directory. -m, –message MESSAGE Specify the message used when committing on the deploy branch. -n, –no-hash Don’t append the source commit’s hash to the deploy commit’s message. -c, –config-file PATH Override default &amp; environment variables’ values with those in set in the file at ‘PATH’. Must be the first option specified.</p>
+<p>Variables:</p>
+<p>GIT_DEPLOY_DIR Folder path containing the files to deploy. GIT_DEPLOY_BRANCH Commit deployable files to this branch. GIT_DEPLOY_REPO Push the deploy branch to this repository.</p>
+<p>These variables have default values defined in the script. The defaults can be overridden by environment variables. Any environment variables are overridden by values set in a ‘.env’ file (if it exists), and in turn by those set in a file specified by the ‘–config-file’ option.&quot;</p>
+<p>parse_args() { # Set args from a local environment file. if [ -e “.env” ]; then source .env fi</p>
+<pre><code># Set args from file specified on the command-line.
+if [[ $1 = &quot;-c&quot; || $1 = &quot;--config-file&quot; ]]; then
+    source &quot;$2&quot;
+    shift 2
+fi
+
+# Parse arg flags
+# If something is exposed as an environment variable, set/overwrite it
+# here. Otherwise, set/overwrite the internal variable instead.
+while : ; do
+    if [[ $1 = &quot;-h&quot; || $1 = &quot;--help&quot; ]]; then
+        echo &quot;$help_message&quot;
+        return 0
+    elif [[ $1 = &quot;-v&quot; || $1 = &quot;--verbose&quot; ]]; then
+        verbose=true
+        shift
+    elif [[ $1 = &quot;-e&quot; || $1 = &quot;--allow-empty&quot; ]]; then
+        allow_empty=true
+        shift
+    elif [[ ( $1 = &quot;-m&quot; || $1 = &quot;--message&quot; ) &amp;&amp; -n $2 ]]; then
+        commit_message=$2
+        shift 2
+    elif [[ $1 = &quot;-n&quot; || $1 = &quot;--no-hash&quot; ]]; then
+        GIT_DEPLOY_APPEND_HASH=false
+        shift
+    else
+        break
+    fi
+done
+
+# Set internal option vars from the environment and arg flags. All internal
+# vars should be declared here, with sane defaults if applicable.
+
+# Source directory &amp; target branch.
+deploy_directory=${GIT_DEPLOY_DIR:-pages}
+deploy_branch=${GIT_DEPLOY_BRANCH:-gh-pages}
+
+#if no user identity is already set in the current git environment, use this:
+default_username=${GIT_DEPLOY_USERNAME:-deploy.sh}
+default_email=${GIT_DEPLOY_EMAIL:-}
+
+#repository to deploy to. must be readable and writable.
+repo=${GIT_DEPLOY_REPO:-origin}
+
+#append commit hash to the end of message by default
+append_hash=${GIT_DEPLOY_APPEND_HASH:-true}</code></pre>
+<p>}</p>
+<p>main() { parse_args “$@”</p>
+<pre><code>enable_expanded_output
+
+if ! git diff --exit-code --quiet --cached; then
+    echo Aborting due to uncommitted changes in the index &gt;&amp;2
+    return 1
+fi
+
+commit_title=`git log -n 1 --format=&quot;%s&quot; HEAD`
+commit_hash=` git log -n 1 --format=&quot;%H&quot; HEAD`
+
+#default commit message uses last title if a custom one is not supplied
+if [[ -z $commit_message ]]; then
+    commit_message=&quot;publish: $commit_title&quot;
+fi
+
+#append hash to commit message unless no hash flag was found
+if [ $append_hash = true ]; then
+    commit_message=&quot;$commit_message&quot;$&#39;\n\n&#39;&quot;generated from commit $commit_hash&quot;
+fi
+    
+previous_branch=`git rev-parse --abbrev-ref HEAD`
+
+if [ ! -d &quot;$deploy_directory&quot; ]; then
+    echo &quot;Deploy directory &#39;$deploy_directory&#39; does not exist. Aborting.&quot; &gt;&amp;2
+    return 1
+fi
+
+# must use short form of flag in ls for compatibility with OS X and BSD
+if [[ -z `ls -A &quot;$deploy_directory&quot; 2&gt; /dev/null` &amp;&amp; -z $allow_empty ]]; then
+    echo &quot;Deploy directory &#39;$deploy_directory&#39; is empty. Aborting. If you&#39;re sure you want to deploy an empty tree, use the --allow-empty / -e flag.&quot; &gt;&amp;2
+    return 1
+fi
+
+if git ls-remote --exit-code $repo &quot;refs/heads/$deploy_branch&quot; ; then
+    # deploy_branch exists in $repo; make sure we have the latest version
+    
+    disable_expanded_output
+    git fetch --force $repo $deploy_branch:$deploy_branch
+    enable_expanded_output
+fi
+
+# check if deploy_branch exists locally
+if git show-ref --verify --quiet &quot;refs/heads/$deploy_branch&quot;
+then incremental_deploy
+else initial_deploy
+fi
+
+restore_head</code></pre>
+<p>}</p>
+<p>initial_deploy() { git –work-tree “$deploy_directory” checkout –orphan <span class="math inline">\(deploy_branch  git --work-tree &quot;\)</span>deploy_directory&quot; add –all commit+push }</p>
+<p>incremental_deploy() { #make deploy_branch the current branch git symbolic-ref HEAD refs/heads/<span class="math inline">\(deploy_branch  #put the previously committed contents of deploy_branch into the index  git --work-tree &quot;\)</span>deploy_directory&quot; reset –mixed –quiet git –work-tree “$deploy_directory” add –all</p>
+<pre><code>set +o errexit
+diff=$(git --work-tree &quot;$deploy_directory&quot; diff --exit-code --quiet HEAD --)$?
+set -o errexit
+case $diff in
+    0) echo No changes to files in $deploy_directory. Skipping commit.;;
+    1) commit+push;;
+    *)
+        echo git diff exited with code $diff. Aborting. Staying on branch $deploy_branch so you can debug. To switch back to master, use: git symbolic-ref HEAD refs/heads/master &amp;&amp; git reset --mixed &gt;&amp;2
+        return $diff
+        ;;
+esac</code></pre>
+<p>}</p>
+<p>commit+push() { set_user_id git –work-tree “<span class="math inline">\(deploy_directory&quot; commit -m &quot;\)</span>commit_message”</p>
+<pre><code>disable_expanded_output
+#--quiet is important here to avoid outputting the repo URL, which may contain a secret token
+git push --quiet $repo $deploy_branch
+enable_expanded_output</code></pre>
+<p>}</p>
+</section>
+<section id="echo-expanded-commands-as-they-are-executed-for-debugging" class="level1">
+<h1>echo expanded commands as they are executed (for debugging)</h1>
+<p>enable_expanded_output() { if [ $verbose ]; then set -o xtrace set +o verbose fi }</p>
+</section>
+<section id="this-is-used-to-avoid-outputting-the-repo-url-which-may-contain-a-secret-token" class="level1">
+<h1>this is used to avoid outputting the repo URL, which may contain a secret token</h1>
+<p>disable_expanded_output() { if [ $verbose ]; then set +o xtrace set -o verbose fi }</p>
+<p>set_user_id() { if [[ -z <code>git config user.name</code> ]]; then git config user.name “<span class="math inline">\(default_username&quot;  fi  if [[ -z `git config user.email` ]]; then  git config user.email &quot;\)</span>default_email” fi }</p>
+<p>restore_head() { if [[ $previous_branch = “HEAD” ]]; then #we weren’t on any branch before, so just set HEAD back to the commit it was on git update-ref –no-deref HEAD $commit_hash <span class="math inline">\(deploy_branch  else  git symbolic-ref HEAD refs/heads/\)</span>previous_branch fi</p>
+<pre><code>git reset --mixed</code></pre>
+<p>}</p>
+<p>filter() { sed -e “s|$repo|$repo|g” }</p>
+<p>sanitize() { “$@” 2&gt; &gt;(filter 1&gt;&amp;2) | filter }</p>
+<p>[[ $1 = –source-only ]] || main “$@”</p>
+</section>
+</div>
+</div>
+
+<script src="js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+  function animateLogo() {
+    var background = document.getElementById("logo-background");
+    var logo = document.getElementById("logo");
+
+    logo.src = "img/logo-animated.svg";
+    logo.className = "plain logo-corner";
+    background.className += " background-fade-out";
+
+    setTimeout(function() {
+      background.parentElement.removeChild(background);
+    }, 5500);
+  }
+
+  function initReveal() {
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      width: 1280,
+      height: 720,
+      margin: 0.15,
+      controls: true,
+      progress: true,
+      history: true,
+      center: false,
+      keyboard: false,
+
+    // available themes are in /css/theme
+          theme: Reveal.getQueryHash().theme || 'codestar', 
+    
+    // default/cube/page/concave/zoom/linear/fade/none
+          transition: Reveal.getQueryHash().transition || 'linear',
+    
+    math: {
+      mathjax: 'js/mathjax/MathJax.js',
+      config: 'TeX-MML-AM_SVG'  // See http://docs.mathjax.org/en/latest/config-files.html
+    },
+
+    // Optional libraries used to extend on reveal.js
+    dependencies: [
+      { src: 'js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+      { src: 'plugin/math/math.js', async: true },
+      { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+      // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+    ]
+    });
+  }
+
+  function inIframe () {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true;
+    }
+  }
+
+
+  var started = false;
+  initReveal();
+
+  // Maybe also if hash present?
+  if (inIframe()) {
+    var background = document.getElementById("logo-background");
+    var logo = document.getElementById("logo");
+    background.parentElement.removeChild(background);
+    logo.parentElement.removeChild(logo);
+  } else {
+    var logo = document.getElementById("logo")
+    if(logo !== null) {
+      logo.style.display = "block";
+      document.addEventListener('keypress', function (e) {
+        if (e.keyCode === 0 || e.keyCode === 32) {
+          e.preventDefault();
+          if (!started) {
+            Reveal.configure({ keyboard: true });
+            animateLogo();
+            started = true;
+          }
+        }
+      }, false);
+    } else {
+      Reveal.configure({ keyboard: true });
+    }
+  }
+
+</script>
+
+</body>
+</html>
