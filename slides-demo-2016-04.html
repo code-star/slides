@@ -463,41 +463,41 @@ def main(args: Array[String]) {
 <thead>
 <tr class="header">
 <th style="text-align: center;">Key</th>
-<th style="text-align: left;">Action</th>
+<th>Action</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: center;"><kbd>←</kbd> / <kbd>→</kbd></td>
-<td style="text-align: left;">Navigate sections</td>
+<td>Navigate sections</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;"><kbd>↑</kbd> / <kbd>↓</kbd></td>
-<td style="text-align: left;">Navigate subsections</td>
+<td>Navigate subsections</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;"><kbd>Space</kbd></td>
-<td style="text-align: left;">Next <strong>slide</strong> (reverse with <kbd>Shift</kbd>)</td>
+<td>Next <strong>slide</strong> (reverse with <kbd>Shift</kbd>)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;"><kbd>S</kbd></td>
-<td style="text-align: left;">Open <em>speaker notes</em> window</td>
+<td>Open <em>speaker notes</em> window</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;"><kbd>B</kbd> / <kbd>.</kbd></td>
-<td style="text-align: left;">Turn screen black</td>
+<td>Turn screen black</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;"><kbd>F</kbd></td>
-<td style="text-align: left;">Toggle fullscreen</td>
+<td>Toggle fullscreen</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;"><kbd>O</kbd></td>
-<td style="text-align: left;">Toggle overview</td>
+<td>Toggle overview</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;"><kbd>Esc</kbd></td>
-<td style="text-align: left;">Exit fullscreen / toggle overview</td>
+<td>Exit fullscreen / toggle overview</td>
 </tr>
 </tbody>
 </table>
@@ -642,17 +642,22 @@ Thank you
     background.parentElement.removeChild(background);
     logo.parentElement.removeChild(logo);
   } else {
-    document.getElementById("logo").style.display = "block";
-    document.addEventListener('keypress', function (e) {
-      if (e.keyCode === 0 || e.keyCode === 32) {
-        e.preventDefault();
-        if (!started) {
-          Reveal.configure({ keyboard: true });
-          animateLogo();
-          started = true;
+    var logo = document.getElementById("logo")
+    if(logo !== null) {
+      logo.style.display = "block";
+      document.addEventListener('keypress', function (e) {
+        if (e.keyCode === 0 || e.keyCode === 32) {
+          e.preventDefault();
+          if (!started) {
+            Reveal.configure({ keyboard: true });
+            animateLogo();
+            started = true;
+          }
         }
-      }
-    }, false);
+      }, false);
+    } else {
+      Reveal.configure({ keyboard: true });
+    }
   }
 
 </script>

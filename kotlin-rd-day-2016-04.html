@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<title>Kotlin R&amp;D day</title>
+
+<meta name="description" content="Kotlin R&amp;D day">    
+
+  <meta name="author" content="Hamza Haiken <span style='font-size: 25%;'>(who also made the tool, blame him for bugs)</sub>" />
+  <meta name="author" content="David Hoepelman" />
+  <meta name="author" content="Donavan de Kuiper" />
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/codestar.css" id="theme">
+
+<link href='font/fira-code/fira-code.css' rel='stylesheet' type='text/css'>
+<link href='font/conduit-itc-std/conduit-itc-std.css' rel='stylesheet' type='text/css'>
+<link href="css/kbdfun.css" rel="stylesheet">
+
+<!-- For syntax highlighting -->
+  <link rel="stylesheet" href="css/dracula.css">
+
+<!-- QR Code -->
+<script src="js/qrcode.js"></script>
+
+<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+<script>
+  document.write( '<link rel="stylesheet" href="css/print/' +
+    ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + 
+    '.css" type="text/css" media="print">' );
+</script>
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<![endif]-->
+</head>
+
+<body>
+
+<img id="clouds1" src="img/clouds1.png" />
+<img id="clouds2" src="img/clouds2.png" />
+<img id="curves" src="img/curves.svg" />
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<div class="slides">
+
+<div id="logo-background"></div>
+<img id="logo" class="plain logo-still" alt="CODESTAR" src="img/logo-star.svg" />
+
+<section style="height: 100%;">
+<h1>Kotlin R&amp;D day</h1>
+<h3>Hamza Haiken <span style='font-size: 25%;'>(who also made the tool, blame him for bugs)</sub></h3><h3>David Hoepelman</h3><h3>Donavan de Kuiper</h3>
+<p>
+<h4>15 April 2016</h4>
+</p>
+<div id="credits">Built by <a href="">Showtime</a></div>
+</section>  
+
+<section>
+<h1>Follow along</h1>
+<h2>Link to the slides</h2>
+<center>
+  <div id="qrcode"></div>
+  <pre id="qrlink"></pre>
+</center>
+<script type="text/javascript">
+var url = window.location.protocol + "//" + window.location.host + window.location.pathname;
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+    text: url,
+    width: 384,
+    height: 384,
+    border: 2,
+    colorDark : "#10579E",
+    colorLight : "#ffffff"
+});
+document.getElementById("qrlink").textContent = url;
+</script>
+</section>
+
+<section>
+  <h1>Contents</h1>
+  <nav id="TOC">
+    <ul>
+    <li><a href="#what-is-kotlin-kotlin">What is <img src="img/kotlin.png" alt="Kotlin" width="70" /> Kotlin</a></li>
+    <li><a href="#comparison-to-scala">Comparison to Scala</a></li>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#questions">Questions</a></li>
+    </ul>
+  </nav>
+</section>
+
+<section id="what-is-kotlin-kotlin" class="level1">
+<h1>What is <img src="img/kotlin.png" alt="Kotlin" width="70" /> Kotlin</h1>
+<section id="section" class="level2">
+<h2></h2>
+<ul>
+<li>New language by Jetbrains</li>
+<li>Meant to convert Java devs</li>
+<li>Design goals:
+<ul>
+<li>Concise</li>
+<li>Safe (Static typing, no nulls)</li>
+<li>Versatile (JVM, Android, Browser)</li>
+<li>Interoparable (with Java)</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="comparison-to-scala" class="level1">
+<h1>Comparison to Scala</h1>
+<section id="same" class="level2">
+<h2>Same</h2>
+<ul style="font-size: 50%;">
+<li>
+No-semicolons
+</li>
+<li>
+Expression-based
+</li>
+<li>
+Backpacks to escape keywords/spaces
+</li>
+<li>
+Covariant/contravariant generics
+</li>
+<li>
+Default arguments
+</li>
+<li>
+Operator overloading
+</li>
+<li>
+Unchecked exceptions (even from Java)
+</li>
+<li>
+Companion objects
+</li>
+<li>
+Type interference (local)
+</li>
+<li>
+Override modifier
+</li>
+<li>
+Constructor syntax <code>class Foo(arg: val)</code>, also fields.
+</li>
+<li>
+Class iniatilization blocks (explicit)
+</li>
+<li>
+Operators collection (<code>x[a] ==&gt; x.get(a)</code>)
+</li>
+<li>
+Apply method (<code>x() ==&gt; x.invoke()</code>)
+</li>
+<li>
+Multiple constructors have to call the primary
+</li>
+<li>
+Algebraic Data Type / Sealed classes
+</li>
+<li>
+Val/var immutable/mutable
+</li>
+<li>
+Mutable and immutable classes
+</li>
+<li>
+Range literals
+</li>
+<li>
+Collections immutable by default
+</li>
+<li>
+No multiple inheritance, ut with interface
+</li>
+<li>
+Flatmap
+</li>
+<li>
+Data class/case class (automatic equals/hascode etc.)
+</li>
+<li>
+Static typing
+</li>
+<li>
+Unit
+</li>
+</ul>
+</section>
+<section id="different" class="level2">
+<h2>Different</h2>
+<ul>
+<li>Override modifier even for interface/trait implementations</li>
+<li>Explicit return (unless <code>Unit</code>)</li>
+<li>Classes and methods are sealed/final by default (same as C++, C#)</li>
+<li><code>when</code> expressions instead of <code>switch</code> or <code>if-else</code> trees</li>
+</ul>
+<pre class="kotlin"><code>when(x) {
+    1, 2 -&gt; println(&quot;1 or 2&quot;)
+    3 -&gt; println(&quot;That&#39;s a 3&quot;)
+    else -&gt; println(&quot;TODO: add all other numbers&quot;)
+}</code></pre>
+</section>
+<section id="different2" class="level2">
+<h2>Different2</h2>
+<ul>
+<li>No <code>new</code> keyword <code>val x = MyClass()</code></li>
+<li>No fields, always properties (backing fields can be accessed if necessary)</li>
+<li>Far less generic</li>
+</ul>
+<pre><code>fun x() { 1 }
+fun y(a: Int) { a }
+x + 1            // Nope
+x() + 1
+(1..10).map(y)   // Nope
+(1..10).map(::y)</code></pre>
+<ul>
+<li>Lots of specialized keywords</li>
+</ul>
+</section>
+<section id="keywords" class="level2">
+<h2>Keywords</h2>
+<p><img style="display: block; width: 500px; float: right;" src="img/kotlinrd/keywordallthethings.jpg" /></p>
+<ul>
+<li><code>operator</code></li>
+<li><code>vararg</code></li>
+<li><code>open</code></li>
+<li><code>internal</code></li>
+<li><code>data</code></li>
+<li><code>annotation</code></li>
+<li><code>tailrec</code></li>
+<li><code>inline</code></li>
+<li><code>infix</code></li>
+<li><code>companion</code></li>
+<li><code>...</code></li>
+</ul>
+<p><br style="clear:both"/></p>
+</section>
+<section id="better" class="level2">
+<h2>Better</h2>
+<ul>
+<li>Java Interop</li>
+<li>Java Enums</li>
+<li>Explicit inlining (scala 2.12 has some inlining)</li>
+<li>Extension methods</li>
+</ul>
+<pre class="kotlin"><code>infix fun Int.myFancyPlus(other : Int) {
+    return this + other
+}
+1 myFancyPlus 2</code></pre>
+</section>
+<section id="better-1" class="level2">
+<h2>Better</h2>
+<ul>
+<li>Null safety</li>
+</ul>
+<pre class="kotlin"><code>val x : Int  = null // Compile error
+val y : Int? = null
+
+val a = y.?call()   // Null propagation, a = null
+val b = y ?: -1     // Elvis operator
+val c = y!!.call()  // throws NPE if null</code></pre>
+</section>
+<section id="worsemissing" class="level2">
+<h2>Worse/missing</h2>
+<p><img src="img/kotlinrd/yunopatternmatch.jpeg" width="240" style="display: block; float: right; margin-left: 50px; margin-top: 65px;" /></p>
+<ul>
+<li>Pattern matching</li>
+</ul>
+<pre><code>when(e) {
+    Foo(1,2) -&gt; // Works because Foo implements equals
+    Foo(a,b) -&gt; // Doesn&#39;t compile
+}
+val (a,b) = Foo(1,2) // &quot;alternative&quot;</code></pre>
+<p><br style="clear:both"/></p>
+</section>
+<section id="worse-missing" class="level2">
+<h2>Worse / Missing</h2>
+<ul>
+<li>Implicits, implicit conversions</li>
+<li>Macros</li>
+<li>Special characters in methods (<code>route ~ index</code>)</li>
+<li>Value types (planned)</li>
+<li>Type classes</li>
+<li>Traits (java 8 style interfaces instead)</li>
+<li>Lazy keyword</li>
+<li>For comprehensions</li>
+</ul>
+</section>
+</section>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<section id="section-1" class="level2">
+<h2></h2>
+<p>Pro:</p>
+<ul>
+<li>Good Java interop</li>
+<li>Easy mixing Java and Kotlin</li>
+<li>Easier transition from Java</li>
+<li>Good IDE support</li>
+<li>Small runtime</li>
+</ul>
+<p>Cons:</p>
+<ul class="minusbullets">
+<li>
+Way less advanced than Scala
+</li>
+<li>
+No ecosystem
+</li>
+<li>
+You’re stuck to Jetbrains/IntelliJ
+</li>
+<li>
+Unknown long-term language viability
+</li>
+</ul>
+</section>
+<section id="section-2" class="level2">
+<h2></h2>
+<div style="height: 100px;">
+
+</div>
+<blockquote>
+<p>if you are happy with Scala, you most likely do not need Kotlin</p>
+</blockquote>
+<center>
+– Kotlin docs
+</center>
+</section>
+</section>
+<section id="questions" class="level1">
+<h1>Questions</h1>
+<section id="section-3" class="level2">
+<h2></h2>
+<p class="huge">
+?
+</p>
+</section>
+<section id="section-4" class="level2">
+<h2></h2>
+<br><br><br>
+<p class="big">
+Thank you
+</p>
+</section>
+</section>
+</div>
+</div>
+
+<script src="js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+  function animateLogo() {
+    var background = document.getElementById("logo-background");
+    var logo = document.getElementById("logo");
+
+    logo.src = "img/logo-animated.svg";
+    logo.className = "plain logo-corner";
+    background.className += " background-fade-out";
+
+    setTimeout(function() {
+      background.parentElement.removeChild(background);
+    }, 5500);
+  }
+
+  function initReveal() {
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      width: 1280,
+      height: 720,
+      margin: 0.15,
+      controls: true,
+      progress: true,
+      history: true,
+      center: false,
+      keyboard: false,
+
+    // available themes are in /css/theme
+          theme: Reveal.getQueryHash().theme || 'codestar', 
+    
+    // default/cube/page/concave/zoom/linear/fade/none
+          transition: Reveal.getQueryHash().transition || 'linear',
+    
+    math: {
+      mathjax: 'js/mathjax/MathJax.js',
+      config: 'TeX-MML-AM_SVG'  // See http://docs.mathjax.org/en/latest/config-files.html
+    },
+
+    // Optional libraries used to extend on reveal.js
+    dependencies: [
+      { src: 'js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+      { src: 'plugin/math/math.js', async: true },
+      { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+      // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+    ]
+    });
+  }
+
+  function inIframe () {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true;
+    }
+  }
+
+
+  var started = false;
+  initReveal();
+
+  // Maybe also if hash present?
+  if (inIframe()) {
+    var background = document.getElementById("logo-background");
+    var logo = document.getElementById("logo");
+    background.parentElement.removeChild(background);
+    logo.parentElement.removeChild(logo);
+  } else {
+    var logo = document.getElementById("logo")
+    if(logo !== null) {
+      logo.style.display = "block";
+      document.addEventListener('keypress', function (e) {
+        if (e.keyCode === 0 || e.keyCode === 32) {
+          e.preventDefault();
+          if (!started) {
+            Reveal.configure({ keyboard: true });
+            animateLogo();
+            started = true;
+          }
+        }
+      }, false);
+    } else {
+      Reveal.configure({ keyboard: true });
+    }
+  }
+
+</script>
+
+</body>
+</html>
