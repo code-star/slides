@@ -1,7 +1,7 @@
 % Kotlin R&D day
 % Hamza Haiken <span style='font-size: 25%;'>(who also made the tool, blame him for bugs)</sub>
   David Hoepelman
-  Donavan de Kuiper
+  Donovan de Kuiper
 % 15 April 2016
 
 # What is ![Kotlin](img/kotlin.png){width=70px} Kotlin
