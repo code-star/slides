@@ -1,0 +1,24 @@
+@font-face {
+  font-family: Conduit;
+  src: url("./conduit-itc-std.otf") format("opentype"), url("./conduit-itc-std.woff") format("woff");;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Conduit;
+  src: url("./conduit-itc-std-bold.otf") format("opentype"), url("./conduit-itc-std-bold.woff") format("woff");;
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: Conduit;
+  src: url("./conduit-itc-std-italic.otf") format("opentype"), url("./conduit-itc-std-italic.woff") format("woff");
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Conduit;
+  src: url("./conduit-itc-std-bolditalic.otf") format("opentype"), url("./conduit-itc-std-bolditalic.woff") format("woff");
+  font-weight: bold;
+  font-style: italic;
+}
