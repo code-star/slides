@@ -112,6 +112,10 @@ body {
   margin-left: -1em;
 }
 
+.reveal ul.minusbullets li:before {
+  content: '-';
+}
+
 .reveal ul ul,
 .reveal ul ol,
 .reveal ol ol,
