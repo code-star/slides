@@ -194,17 +194,22 @@ $body$
     background.parentElement.removeChild(background);
     logo.parentElement.removeChild(logo);
   } else {
-    document.getElementById("logo").style.display = "block";
-    document.addEventListener('keypress', function (e) {
-      if (e.keyCode === 0 || e.keyCode === 32) {
-        e.preventDefault();
-        if (!started) {
-          Reveal.configure({ keyboard: true });
-          animateLogo();
-          started = true;
+    var logo = document.getElementById("logo")
+    if(logo !== null) {
+      logo.style.display = "block";
+      document.addEventListener('keypress', function (e) {
+        if (e.keyCode === 0 || e.keyCode === 32) {
+          e.preventDefault();
+          if (!started) {
+            Reveal.configure({ keyboard: true });
+            animateLogo();
+            started = true;
+          }
         }
-      }
-    }, false);
+      }, false);
+    } else {
+      Reveal.configure({ keyboard: true });
+    }
   }
 
 </script>
