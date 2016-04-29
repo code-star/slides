@@ -3,7 +3,7 @@
   I. Sital
 % 19 May 2016
 
-# Who are we?
+# Who are we?
 ## Hamza
 ## Ishan
 
