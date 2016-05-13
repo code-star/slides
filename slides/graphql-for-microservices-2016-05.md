@@ -80,6 +80,7 @@ Pros:
 + Flexibility
 + Recursive queries
 + Easy to use
++ Resilient
 
 Cons: 
 
@@ -87,6 +88,10 @@ Cons:
 <li>Need to build a schema by hand</li>
 <li>Non-trivial resolver implementation</li>
 </ul>
+
+<aside class="notes">
+- Resilient: partial results when down, with error detail
+</aside>
 
 ## Alternatives
 
@@ -170,6 +175,14 @@ The only goal not met is the *low coupling*, but:
 - All services expose a health check endpoint for *Marathon*
 - All services expose *Prometheus* metrics, big focus on monitoring
 - Centralized logging with *Elasticsearch*
+
+## Scala @ Wehkamp
+
+- Main language for services
+- Most services are actor based using Akka
+    - Easy to scale
+    - Akka clustering
+- Routing with Spray
 
 ## Cool stuff
 
@@ -274,65 +287,422 @@ Total response length: 64B (0.0625KiB)
 
 ## Case 2
 
-We need data from the product service and the catalog service.
+We need the recommendations for a certain product number,<br>
+and for each we want the title and image.
+
+For 10 recommendations, we would need to:
+
+- Query the recommendations service
+- Parse the response
+- For each parsed product number:
+    - Query the product service
+    - Parse the response
 
 ## Merging services
 
-DO A QUERY WITH A PRODUCT AND CATEGORY
-
 <div style="float: left; width: 50%">
-```json
-
+```scala
+{
+  recommendations(product_number: "748002") {
+    products {
+      product {
+        title
+        primary_image {
+          file_name
+        }
+      }
+    }
+  }
+}
 ```
 </div>
 
 <div style="float: right; width: 50%">
 ```json
-
+{
+  "data": {
+    "recommendations": {
+      "products": [
+        {
+          "product": {
+            "title": "Apple iPad mini met Retina Display 16GB Wi-Fi",
+            "primary_image": {
+              "file_name": "114015_pb_01"
+            }
+          }
+        },
+        {
+          "product": {
+            "title": "Tucano iPad Air 2 Filo folio hoes",
+            "primary_image": {
+              "file_name": "545728_pb_01"
+            }
+          }
+        },
+        {
+          "product": {
+            "title": "Apple iPad Air met Retina Display 16GB Wi-Fi",
+            "primary_image": {
+              "file_name": "114718_pb_01"
+            }
+          }
+        },
+        {
+          "product": {
+            "title": "Valenta iPhone 6 plus/ 6s plus flipcover",
+            "primary_image": {
+              "file_name": "489592_pb_01"
+            }
+          }
+        },
+        {
+          "product": {
+            "title": "C&A Palomino sweater",
+            "primary_image": {
+              "file_name": "653834_pb_01"
+            }
+          }
+        },
+        {
+          "product": {
+            "title": "C&A Palomino trui",
+            "primary_image": {
+              "file_name": "660709_pb_01"
+            }
+          }
+        },
+        {
+          "product": {
+            "title": "C&A Palomino jurk",
+            "primary_image": {
+              "file_name": "691678_pb_01"
+            }
+          }
+        },
+        {
+          "product": {
+            "title": "Melkco iPhone 6/6s Herman leren flipcover",
+            "primary_image": {
+              "file_name": "646375_pb_01"
+            }
+          }
+        },
+        {
+          "product": {
+            "title": "C&A Palomino sweater",
+            "primary_image": {
+              "file_name": "674561_pb_01"
+            }
+          }
+        },
+        {
+          "product": {
+            "title": "C&A Palomino sweater",
+            "primary_image": {
+              "file_name": "626283_pb_01"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
 ```
 </div>
 
+##
+
+
+Operation | Connections | Response length | Efficiency
+:---------|------------:|----------------:|-----------:
+Raw       |          11 |          ~14KiB |      3.48%
+GraphQL   |           1 |           ~2KiB |     24.41%
+
+: Effective size of useful/needed data: 500B <br> (10 products, titles and image names) <br><br>
+
 ## Case 3
 
-We need to get the product informations of the recommendations of a given product.
+For a given product, we need:
+
+- Name
+- Main picture
+- 10 recommendations, and for each:
+    - Name
+    - Main picture
+    - 10 recommendations, and for each:
+        - Name
+        - Main picture
 
 ## Recursion
 
-DO IT
+<div style="float: left; width: 50%">
+```scala
+{
+  product(product_number: "748002") {
+    title
+    primary_image { file_name }
+    recommendations {
+      products {
+        product {
+          title
+          primary_image { file_name }
+          recommendations {
+            products {
+              product {
+                title
+                primary_image { file_name }
+              }
+            }
+          }
+        }
+      } 
+    }
+  }
+}
+```
+</div>
 
-# Demo
+<div style="float: right; width: 50%">
+```json
+{
+  "data": {
+    "product": {
+      "title": "Apple  Ipad mini Smart Cover",
+      "primary_image": {
+        "file_name": "748002_pb_01"
+      },
+      "recommendations": {
+        "products": [
+          ...
+        ]
+      }
+    }
+  }
+}
+```
+</div>
+
+##
+
+Operation | Connections | Response length | Efficiency
+:---------|------------:|----------------:|-----------:
+Raw       |         122 |         ~155KiB |       3.2%
+GraphQL   |           1 |          ~29KiB |      17.2%
+
+: Effective size of useful/needed data: ~5KiB <br> (111 products, titles and image names) <br><br>
+
+# Demo 1
+
 <aside class="notes">
 We need to demo:
-- What we have now
-    - Product service
-    - Recommendation service
-- Combine with GraphQL
+
 - Introspection
-- Bit of code
-    - Resolvers
-    - Schema
-- Query service
-    - Add named query
-    - Named query example
 </aside>
 
 # Query service
-## "BFF"
+
+##
+
+Given all the goals cited earlier,
+
+we set out to create a query service,
+
+aimed at the mobile app (for now)
+
+## "BFF" Pattern
+
+- This kind of service is also called BFF: "Backends For Frontends"
+- Used by many companies (term coined by Soundcloud)
+- We do not want logic in apps
+- Define different APIs for each *kind* of client
+- We can do this with GraphQL named queries
+
 ## Microservice architecture
+
+- Data scattered across multiple services
+- Internal hops negligible
+- "BFF" fits perfectly as an internal microservice
+- Dual functionality:
+    - Named query BFF for mobile clients
+    - Internal GraphQL endpoint for internal services
+
+## Query service architecture
+
+- Actor based using default actors from Blaze libraries
+- Two main routes using Spray
+    - Raw GraphQL endpoint
+    - Named queries
+- Useful helpers reduce the length and redundancy of the code
+- Manual schema and resolver implementation
+
 ## Scala
+
+*what do we use in the service?*
+
 ## Sangria
-## Schema
-## Resolvers
+
+*how nice is sangria to use?*
+*how does it compare to other implementatoins in other languages*
+
+## Schema definition
+
+- Schema objects defined with case classes
+- Straight forward thanks to helpers and macros
+- Reflects the JSON schema of REST API responses from services
+- We add fields when objects need to be nested
+- Object fields can refer to other objects of the schema
+
+```scala
+case class Recommendation(score: Option[BigDecimal], product_number: Option[String]) {
+  @GraphQLField
+  def product(implicit ctx: Ctx): Remote[Product] = remote(product_number)
+}
+```
+
+##
+
+We gain *flexibility* by merging services, but we introduce a *hard coupling* between the query service and other services. We also need to actively *maintain* a schema
+
+Is it worth it? Yes:
+
+- The APIs don't change that much
+- Schema easy to write and maintain
+- Integration testing alerts from API changes
+
+## Resolver definition
+
+First, we need to:
+
+- Define which service needs to be called
+- What is the REST endpoint (with placeholder variables)
+- A magical helper function creates the resolver that:
+    - Fetches the JSON
+    - Parses and returns a `JsObject`
+
+```scala
+implicit val RecommendationsResolver: TypedEntityResolver[Recommendations, String] =
+  getSingleEntityResolverId("recommendations-gateway", "/$id?panel=pdp_rec")
+```
+
+##
+
+Then, Sangria needs to know how to convert from `JsObject` to our case class `Recommendation`
+
+```scala
+private implicit val RecommendationFormat = jsonFormat2(Recommendation)
+```
+
+Those two lines are the only things we need to write when we need to add a new service.
+
+##
+
+What does the resolver itself look like?
+
+- Sangria needs a `TypedEntityResolver` class that knows where to get data
+- The `resolveSingle()` method queries the correct service and returns a `Future` of `JsObject`
+
+```scala
+case class GetSingleEntityResolver
+    (serviceKey: String, path: String, contentType: String)
+    extends TypedEntityResolver[JsObject, GetQuery] {
+  
+  override def resolve(...): Vector[Future[Option[JsObject]]] =
+    items map { item ⇒ resolveSingle(item.args) }
+
+  def resolveSingle(args: GetQuery)
+      (implicit ctx: GraphQlContext): Future[Option[JsObject]] = {
+    
+    val request = HttpRequest(
+      HttpMethods.GET,
+      replaceUriPlaceholders(Uri(ctx.services(serviceKey) + path), replace),
+      ...
+    )
+    ctx.sendReceive(request).map(parseJsonObject)
+  }
+}
+```
+
 ## Named queries
+
+To avoid putting logic in apps, we can use named queries:
+
+```plain
+query($product_numbers: [String!]!) {
+  products(product_numbers: $product_numbers) {
+    title
+    description
+    properties {
+      label
+      value
+    }
+  }
+}
+```
+
+- Looks like a normal query, wrapped in a `query` object with parameters
+- We store named queries in namespaces (one for each client BFF, for example `mobile`)
+
+##
+
+In our service, we store named queries in files, which has some advantages:
+
+- They are validated at test time
+- Easy to maintain a folder hierarchy
+- Better for version control
+
+##
+
+Before creating an endpoint for each named query, we need to parse them using Sangria:
+
+```scala
+val Success(queryAst) = QueryParser.parse(namedQuery.query)
+```
+
+We can then execute them (after injecting the correct parameters from the client request):
+
+```scala
+val userContext = GraphQlContext(executionContext, sendReceive, services, locale)
+onComplete(executor.execute(queryAst, userContext, (), variables = jsonParams).mapTo[JsObject]) {
+  case Success(response) ⇒
+    processResponse(response)
+  case _ => ???
+}
+```
+
 ## Security
-## Testing
+
+- GraphQL only used internally, no outside access
+- Public facing endpoint are named queries, which remove a lot of external control
+- Public access still goes through the rest of the platform for other security checks
+
+# Demo 2
+
+<aside class="notes">
+
+- Query service
+    - Add named query (take query from Demo 1)
+    - Named query example
+- Bit of code
+    - Schema
+    - Resolvers
+</aside>
 
 # Results
-## Less data used
-## Less connections
-## Tailored responses
+
+- Less data used: between 10% and 20% of original response sizes
+- Less connections: only one connection for everything
+- Tailored responses: only get what was asked for
+
 ## Aftermath
+
+- The mobile team is happy
+- Current development app uses the new named queries
+- Investment in the schema enables us to re-use it
+
 ## Future
+
+- Automatic schema generation through documentation
+- Add more BFFs
 
 ## 
 
