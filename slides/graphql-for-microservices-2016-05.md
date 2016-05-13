@@ -689,6 +689,8 @@ onComplete(executor.execute(queryAst, userContext, (), variables = jsonParams).m
 
 # Results
 
+##
+
 - Less data used: between 10% and 20% of original response sizes
 - Less connections: only one connection for everything
 - Tailored responses: only get what was asked for
