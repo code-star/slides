@@ -537,6 +537,24 @@ aimed at the mobile app (for now)
 - Define different APIs for each *kind* of client
 - We can do this with GraphQL named queries
 
+## Examples
+
+Mobile BFF:
+
+```
+/mobile/product_title?id=ID
+/mobile/recommendation_list?id=ID
+...
+```
+
+Desktop BFF:
+
+```
+/desktop/product_informations?id=ID
+/desktop/recommendation_tree?id=ID
+...
+```
+
 ## Microservice architecture
 
 - Data scattered across multiple services
@@ -596,10 +614,13 @@ case class Recommendation(score: Option[BigDecimal], product_number: Option[Stri
 
 ##
 
-We gain *flexibility* by merging services, but we introduce a *hard coupling* between the query service and other services. We also need to actively *maintain* a schema
+- *Hard coupling* between the query service and other services
+-  Also need to actively *maintain* a schema
 
 Is it worth it? Yes:
 
+- Merging services is done in a transparent way
+- Coupling is not added, but moved
 - The APIs don't change that much
 - Schema easy to write and maintain
 - Integration testing alerts from API changes
@@ -621,32 +642,25 @@ implicit val RecommendationsResolver: TypedEntityResolver[Recommendations, Strin
 
 ##
 
-Then, Sangria needs to know how to convert from `JsObject` to our case class `Recommendation`
+Then, Sangria needs to know how to convert <br> from `JsObject` to our case class `Recommendation`
 
 ```scala
 private implicit val RecommendationFormat = jsonFormat2(Recommendation)
 ```
 
-Those two lines are the only things we need to write when we need to add a new service.
+Those two lines are the only things we need to write <br> when we need to add a new service.
 
 ##
 
-What does the resolver itself look like?
-
 - Sangria needs a `TypedEntityResolver` class that knows where to get data
-- The `resolveSingle()` method queries the correct service and returns a `Future` of `JsObject`
+- The `resolveSingle()` method queries the correct service and returns a `JsObject`
 
 ```scala
-case class GetSingleEntityResolver
-    (serviceKey: String, path: String, contentType: String)
+case class GetSingleEntityResolver(serviceKey: String, path: String)
     extends TypedEntityResolver[JsObject, GetQuery] {
-  
-  override def resolve(...): Vector[Future[Option[JsObject]]] =
-    items map { item ⇒ resolveSingle(item.args) }
 
   def resolveSingle(args: GetQuery)
       (implicit ctx: GraphQlContext): Future[Option[JsObject]] = {
-    
     val request = HttpRequest(
       HttpMethods.GET,
       replaceUriPlaceholders(Uri(ctx.services(serviceKey) + path), replace),
@@ -654,6 +668,8 @@ case class GetSingleEntityResolver
     )
     ctx.sendReceive(request).map(parseJsonObject)
   }
+
+  override def resolve(...) = items map { item ⇒ resolveSingle(item.args) }
 }
 ```
 
@@ -661,7 +677,7 @@ case class GetSingleEntityResolver
 
 To avoid putting logic in apps, we can use named queries:
 
-```plain
+```php
 query($product_numbers: [String!]!) {
   products(product_numbers: $product_numbers) {
     title
