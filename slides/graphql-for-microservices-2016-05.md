@@ -11,7 +11,7 @@ Dude from Switzerland who likes to code
 
 - Started at Ordina in 2015
 - Currently at Wehkamp, team **<span style="color: #cc22ff;">Purple</span>** (CI/CD)
-- Blog at http://tenchi.team2xh.net
+- Blog at [http://tenchi.team2xh.net](http://tenchi.team2xh.net)
 
 ## Ishan
 
@@ -535,14 +535,13 @@ aimed at the mobile app (for now)
 - Useful helpers reduce the length and redundancy of the code
 - Manual schema and resolver implementation
 
-## Scala
+## Sangria ![](img/graphql/sangria.svg){style="height:0.7em;margin-bottom:-0.05em"}
 
-*what do we use in the service?*
-
-## Sangria
-
-*how nice is sangria to use?*
-*how does it compare to other implementatoins in other languages*
+- When we started the POC, it was a bit cumbersome (needed lots of helper functions)
+- Library is young, updates all the time
+- Already way easier to use after a few updates
+- No alternatives for Scala yet
+- GraphQL spec is still in movement, but Sangria follows closely
 
 ## Schema definition
 
@@ -691,7 +690,7 @@ onComplete(executor.execute(queryAst, userContext, (), variables = jsonParams).m
 
 ##
 
-- Less data used: between 10% and 20% of original response sizes
+- Less data used: between 10% and 20% of original response sizes
 - Less connections: only one connection for everything
 - Tailored responses: only get what was asked for
 
