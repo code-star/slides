@@ -100,8 +100,8 @@
       <rect x="279" y="201.5" clip-path="url(#clipPath2)" width="232" rx="1.5" ry="1.5" height="225" stroke="none"/>
       <path fill="url(#linearGradient1)" d="M279.75 204.5 Q279.75 202.25 282 202.25 L426.8 202.25 Q429.05 202.25 429.05 204.5 Q429.05 206.75 356.65 293.75 Q284.25 380.75 282 380.75 Q279.75 380.75 279.75 378.5 Z" clip-path="url(#clipPath2)" stroke="none"/>
     </g>
-    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-155,-186)" stroke-linecap="butt">
-      <text x="285" xml:space="preserve" y="219.1016" clip-path="url(#clipPath2)" stroke="none">Monolith</text>
+    <g stroke-linecap="butt" transform="matrix(1,0,0,1,-155,-186)" fill="white" text-rendering="geometricPrecision" font-family="sans-serif" shape-rendering="geometricPrecision" stroke="white" stroke-miterlimit="1.45">
+      <text x="285" xml:space="preserve" y="417.9688" clip-path="url(#clipPath2)" stroke="none">Monolith</text>
     </g>
     <g text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,279.625,104.1935)">
       <g clip-path="url(#clipPath4)">
@@ -434,7 +434,7 @@
       <rect x="310.5" y="299" transform="matrix(1,0,0,1.0667,-297.5,-306.1333)" clip-path="url(#clipPath2)" fill="rgb(255,153,0)" width="45" image-rendering="auto" rx="5" ry="5" height="30" stroke="none"/>
       <path fill="url(#linearGradient2)" d="M313 309 Q313 301.5 320.5 301.5 L329.75 301.5 Q337.25 301.5 337.25 309 Q337.25 316.5 332.625 318.5 Q328 320.5 320.5 320.5 Q313 320.5 313 313 Z" clip-path="url(#clipPath2)" transform="matrix(1,0,0,1.0667,-297.5,-306.1333)" stroke="none" image-rendering="auto"/>
     </g>
-    <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-155,-186)" stroke-linecap="butt">
+    <g stroke-linecap="butt" transform="matrix(1,0,0,1,-155,-186)" fill="white" text-rendering="geometricPrecision" font-family="sans-serif" shape-rendering="geometricPrecision" stroke="white" stroke-miterlimit="1.45">
       <text x="323.8154" xml:space="preserve" y="318.5352" clip-path="url(#clipPath2)" stroke="none">API</text>
     </g>
     <g stroke-linecap="butt" transform="matrix(1,0,0,1,-155,-186)" fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="white" stroke-miterlimit="1.45">
@@ -442,12 +442,12 @@
     </g>
     <g stroke-linecap="butt" transform="matrix(1,0,0,1,-155,-186)" fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="white" stroke-miterlimit="1.45">
       <path d="M310.4823 314 L298.4823 309 L301.4823 314 L298.4823 319 Z" stroke="none" clip-path="url(#clipPath2)"/>
-      <path fill="none" d="M354.7575 301.329 L427.7347 258.8288" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="black" d="M434.6479 254.8028 L421.7619 256.5211 L426.8706 259.3321 L426.7945 265.1625 Z" clip-path="url(#clipPath2)" stroke="none"/>
-      <path fill="none" d="M355.5272 314 L426.6308 314" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="black" d="M434.6308 314 L422.6308 309 L425.6308 314 L422.6308 319 Z" clip-path="url(#clipPath2)" stroke="none"/>
-      <path fill="none" d="M354.7575 326.671 L427.7347 369.1712" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="black" d="M434.6479 373.1972 L426.7944 362.8375 L426.8706 368.6679 L421.7619 371.4789 Z" clip-path="url(#clipPath2)" stroke="none"/>
+      <path fill="none" d="M354.7575 301.329 L427.7347 258.8288" clip-path="url(#clipPath2)"/>
+      <path d="M434.6479 254.8028 L421.7619 256.5211 L426.8706 259.3321 L426.7945 265.1625 Z" clip-path="url(#clipPath2)" stroke="none"/>
+      <path fill="none" d="M355.5272 314 L426.6308 314" clip-path="url(#clipPath2)"/>
+      <path d="M434.6308 314 L422.6308 309 L425.6308 314 L422.6308 319 Z" clip-path="url(#clipPath2)" stroke="none"/>
+      <path fill="none" d="M354.7575 326.671 L427.7347 369.1712" clip-path="url(#clipPath2)"/>
+      <path d="M434.6479 373.1972 L426.7944 362.8375 L426.8706 368.6679 L421.7619 371.4789 Z" clip-path="url(#clipPath2)" stroke="none"/>
     </g>
   </g>
 </svg>
