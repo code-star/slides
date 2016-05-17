@@ -20,11 +20,13 @@ Dude from Switzerland who likes to code
 
 # Wehkamp ![](img/graphql/wehkamp.png){style="height:0.7em;margin-bottom:-0.05em"}
 
-## {data-background="img/graphql/wehkamp_site.png"}
+##
+
+![](img/graphql/wehkamp_site.png){width="75%"}
 
 ##
 
-![Mobile app](img/graphql/wehkamp_mobile.png){style="height: 70vh;"}
+![](img/graphql/wehkamp_mobile.png){style="height: 70vh;"}
 
 ##
 
@@ -188,8 +190,6 @@ We find that GraphQL meets some of these goals quite well:
 - **Consistent**: the scheme reflects the consistency of the services
 - **Elastic**: no state, can scale by running multiple GraphQL servers
 - **Resilient**: handles errors quite well. <br> Returns partial results when some services are unreachable
-
-$\underbrace{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }$
 
 The only goal not met is the **low coupling**, but:
 
