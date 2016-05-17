@@ -1,4 +1,4 @@
-% GraphQL for Microservices
+% GraphQL <br> for Microservices
 % H. Haiken
   I. Sital
 % 19 May 2016
@@ -9,21 +9,93 @@
 
 Dude from Switzerland who likes to code
 
-- Started at Ordina in 2015
-- Currently at Wehkamp, team **<span style="color: #cc22ff;">Purple</span>** (CI/CD)
+- Started at Codestar in 2015
+- Currently at Wehkamp, team <span style="background: white; color: #cc22ff; padding:5px; border-radius:3px; padding-bottom: 3px;">Purple</span> (CI/CD)
 - Blog at [http://tenchi.team2xh.net](http://tenchi.team2xh.net)
 
 ## Ishan
 
-- Started at Ordina in 2015
-- Currently at Wehkamp, team **<span style="color: lime;">Lime</span>** (Mobile app)
+- Started at Codestar in 2015
+- Currently at Wehkamp, team <span style="color: lime;">Lime</span> (Mobile app) 
+
+# Wehkamp ![](img/graphql/wehkamp.png){style="height:0.7em;margin-bottom:-0.05em"}
+
+## {data-background="img/graphql/wehkamp_site.png"}
+
+##
+
+![Mobile app](img/graphql/wehkamp_mobile.png){style="height: 70vh;"}
+
+##
+
+- Switch from .NET monolith to Scala microservices
+- Using the latest technologies
+- Lots of fun!
+
+## Teams
+
+- Many teams, split in colors
+- Each team responsible for their services:
+    - Maintenance
+    - Deployment
+    - Monitoring
+    - Alerting
+
+## CI/CD
+
+- Blaze has a strong focus on automation
+- Platform deployed using *Ansible*
+- Builds done on Jenkins, with promotion pipelines and integrated testing
+- All services in containers, deployed on *Mesos*
+
+## Microservices
+
+- Flexible specification allows for polyglottism:
+    - Mainly Scala
+    - Node.js
+    - .NET
+- Metadata about services centralized in *Consul*
+- All services expose a health check endpoint for *Marathon*
+- All services expose *Prometheus* metrics, big focus on monitoring
+- Centralized logging with *Elasticsearch*
+
+## Architecture
+
+![Simple diagram of the Blaze architecture](img/graphql/blaze-simple.svg){width="70%"}
+
+## Scala @ Wehkamp
+
+- Main language for services
+- Aligns with platform goals
+
+ 
+
+- Most services are actor based using Akka
+    - Easy to scale
+    - Akka persistence & clustering
+- Routing with Spray
+
+## Cool stuff
+
+- Experimenting with new technologies:
+    - GraphQL POC
+    - Kamon metrics
+    - Prometheus
+    - Dashboarding with Grafana
 
 # Situation
 
-- Wehkamp is migrating to a microservices architecture
-- Mobile app has a single access point <br> → doesn't translate well to a microservices architecture
+## 
 
-![Simple diagram of the Blaze architecture](img/graphql/blaze-simple.svg)
+![Before](img/graphql/situation_before.svg){width="60%"}
+
+##
+
+![Currently](img/graphql/situation_current.svg){width="40%"}
+
+##
+
+![What we need](img/graphql/situation_wanted.svg){width="65%"}
 
 # Goals
 
@@ -56,7 +128,12 @@ This left us investigating multiple solutions and we chose **GraphQL**
 
 ## What is it?
 
-- Very flexible query language specification
+- Abstracts different services into one API
+- Specification, not a framework
+
+## Advantages
+
+- Very flexible query language
 - Has interesting features:
     - Query shaped like the expected data
     - Introspection
@@ -68,7 +145,7 @@ This left us investigating multiple solutions and we chose **GraphQL**
 ## Facebook ![](img/graphql/facebook.svg){style="height:0.7em;margin-bottom:-0.05em; border: 2px solid white; border-radius: 3px;"}
 
 - Started working on GraphQL in 2012
-- Needed a "data-fetching API powerful enough to describe *all of Facebook*" for their mobile app
+- Needed a "data-fetching API powerful enough <br> to describe *all of Facebook*" for their mobile app
 - Has to be easy to learn by product developers
 - Used today in their apps and servers
 - Open sourced RFC
@@ -93,49 +170,7 @@ Cons:
 - Resilient: partial results when down, with error detail
 </aside>
 
-## Alternatives
-
-Before jumping in with GraphQL, we also investigated:
-
-- Finagle ![](img/graphql/finagle.png){style="height:0.7em;margin-bottom:-0.05em"}
-- Falcor ![](img/graphql/falcor.svg){style="height:0.7em;margin-bottom:-0.05em"}
-
-Both had more cons than pros compared to GraphQL
-
-## GraphQL vs Finagle
-
-- Merging services:
-    - In GraphQL, you first set up the resolvers and Schema, <br>then you can combine multiple services at a whim with the powerful *query syntax*
-    - In Finagle, you need to *explicitly* write "Proxies" <br> for *each combination* of services that you want to merge
-
-## GraphQL vs Falcor
-
-- GraphQL is a *specification*, with multiple implementations
-- Falcor is a *JavaScript* server *application*
-
-# Wehkamp ![](img/graphql/wehkamp.png){style="height:0.7em;margin-bottom:-0.05em"}
-
-## 
-
-- Big online retailer
-- Switch from .NET monolith to Scala microservices
-- Using the latest technologies
-- Lots of fun!
-
-## Teams
-
-- Many teams, split in colors
-- Each team responsible for their services:
-    - Maintenance
-    - Deployment
-    - Monitoring
-    - Alerting
-
-## Blaze architecture
-
-New platform for Wehkamp, based on a microservices architecture.
-
-Goals:
+## Blaze architecture goals
 
 - **Lowly coupled**: prevent unnecessary dependencies
 - **Highly flexible**: enable rapid change
@@ -149,47 +184,16 @@ Goals:
 
 We find that GraphQL meets some of these goals quite well:
 
-- Flexible: write the scheme once, build powerful queries
-- Consistent: the scheme reflects the consistency of the services
-- Elastic: no state, can scale by running multiple GraphQL servers
-- Resilient: handles errors quite well. Returns partial results when some services are unreachable
+- **Flexible**: write the scheme once, build powerful queries
+- **Consistent**: the scheme reflects the consistency of the services
+- **Elastic**: no state, can scale by running multiple GraphQL servers
+- **Resilient**: handles errors quite well. <br> Returns partial results when some services are unreachable
 
-The only goal not met is the *low coupling*, but:
+$\underbrace{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }$
+
+The only goal not met is the **low coupling**, but:
 
 - There's no current alternative, everyone has to produce a *mega*-schema
-
-## CI/CD
-
-- Blaze has a strong focus on automation
-- Platform deployed using *Ansible*
-- Builds done on Jenkins, with promotion pipelines and integrated testing
-- All services in containers, deployed on *Mesos*
-
-## Microservices
-
-- Flexible specification allows for polyglottism:
-    - Mainly Scala
-    - Node.js
-    - .NET
-- Metadata about services centralized in *Consul*
-- All services expose a health check endpoint for *Marathon*
-- All services expose *Prometheus* metrics, big focus on monitoring
-- Centralized logging with *Elasticsearch*
-
-## Scala @ Wehkamp
-
-- Main language for services
-- Most services are actor based using Akka
-    - Easy to scale
-    - Akka clustering
-- Routing with Spray
-
-## Cool stuff
-
-- Experimenting with new technologies:
-    - GraphQL POC
-    - Kamon metrics
-    - Prometheus
 
 # Examples
 
@@ -198,6 +202,10 @@ The only goal not met is the *low coupling*, but:
 Our app needs to retrieve the title of a product.
 
 ## Querying the product service
+
+![Using no query service](img/graphql/case1_old.svg){width="75%"}
+
+## 
 
 ```json
 {
@@ -263,6 +271,10 @@ Total response length: 1358B (1.326KiB)
 
 ## Only get what you ask for
 
+![Using a query service](img/graphql/case1_new.svg){width="75%"}
+
+##
+
 <div style="float: left; width: 50%">
 ```json
 {
@@ -297,6 +309,14 @@ For 10 recommendations, we would need to:
 - For each parsed product number:
     - Query the product service
     - Parse the response
+
+##
+
+![Using no query service](img/graphql/case2_old.svg){width="30%"}
+
+##
+
+![Using no query service](img/graphql/case2_new.svg){width="50%"}
 
 ## Merging services
 
@@ -520,15 +540,31 @@ aimed at the mobile app (for now)
 ## Microservice architecture
 
 - Data scattered across multiple services
-- Internal hops negligible
+- Internal hops have no cost
 - "BFF" fits perfectly as an internal microservice
 - Dual functionality:
     - Named query BFF for mobile clients
     - Internal GraphQL endpoint for internal services
 
+##
+
+Raw GraphQL
+```http
+POST query-service.blaze/graphql HTTP/1.1
+{
+ product(748002) {
+   title
+ }
+}
+```
+
+Named query BFF
+```http
+GET query-service.blaze/mobile/get_title?id=748002 HTTP/1.1
+```
+
 ## Query service architecture
 
-- Actor based using default actors from Blaze libraries
 - Two main routes using Spray
     - Raw GraphQL endpoint
     - Named queries
@@ -629,17 +665,15 @@ To avoid putting logic in apps, we can use named queries:
 query($product_numbers: [String!]!) {
   products(product_numbers: $product_numbers) {
     title
-    description
     properties {
       label
-      value
     }
   }
 }
 ```
 
 - Looks like a normal query, wrapped in a `query` object with parameters
-- We store named queries in namespaces (one for each client BFF, for example `mobile`)
+- Stored in namespaces (one for each client BFF, for example `mobile`)
 
 ##
 
@@ -648,25 +682,7 @@ In our service, we store named queries in files, which has some advantages:
 - They are validated at test time
 - Easy to maintain a folder hierarchy
 - Better for version control
-
-##
-
-Before creating an endpoint for each named query, we need to parse them using Sangria:
-
-```scala
-val Success(queryAst) = QueryParser.parse(namedQuery.query)
-```
-
-We can then execute them (after injecting the correct parameters from the client request):
-
-```scala
-val userContext = GraphQlContext(executionContext, sendReceive, services, locale)
-onComplete(executor.execute(queryAst, userContext, (), variables = jsonParams).mapTo[JsObject]) {
-  case Success(response) ⇒
-    processResponse(response)
-  case _ => ???
-}
-```
+- All named queries can be compiled at boot time to save resources
 
 ## Security
 
@@ -686,13 +702,33 @@ onComplete(executor.execute(queryAst, userContext, (), variables = jsonParams).m
     - Resolvers
 </aside>
 
-# Results
+# Conclusion
 
-##
+## Results
 
 - Less data used: between 10% and 20% of original response sizes
 - Less connections: only one connection for everything
 - Tailored responses: only get what was asked for
+
+## Alternatives
+
+Before jumping in with GraphQL, we also investigated:
+
+![](img/graphql/finagle.png){style="height:4.95em;margin-bottom:-0.05em; border-radius: 5px;"} ![](img/graphql/falcor.svg){style="background: black; padding: 10px; border-radius: 5px; height:4.5em;margin-bottom:-0.05em"}
+
+Both had more cons than pros compared to GraphQL
+
+## GraphQL vs Finagle
+
+- Merging services:
+    - In GraphQL, you first set up the resolvers and Schema, <br>then you can combine multiple services at a whim with the powerful *query syntax*
+    - In Finagle, you need to *explicitly* write "Proxies" <br> for *each combination* of services that you want to merge
+
+## GraphQL vs Falcor
+
+- GraphQL is a *specification*, with multiple implementations
+- Falcor is a *JavaScript* server *application*
+
 
 ## Aftermath
 
@@ -703,9 +739,7 @@ onComplete(executor.execute(queryAst, userContext, (), variables = jsonParams).m
 ## Future
 
 - Automatic schema generation through documentation
-- Add more BFFs
-
-## 
+- Add more BFFs 
 
 # Questions
 
