@@ -77,14 +77,6 @@ Dude from Switzerland who likes to code
     - Akka persistence & clustering
 - Routing with Spray
 
-## Cool stuff
-
-- Experimenting with new technologies:
-    - GraphQL POC
-    - Kamon metrics
-    - Prometheus
-    - Dashboarding with Grafana
-
 # Situation
 
 ## 
@@ -594,7 +586,6 @@ GET query-service.blaze/mobile/get_title?id=748002 HTTP/1.1
 - When we started the POC, it was a bit cumbersome (needed lots of helper functions)
 - Library is young, updates all the time
 - Already way easier to use after a few updates
-- No alternatives for Scala yet
 - GraphQL spec is still in movement, but Sangria follows closely
 
 ## Schema definition
