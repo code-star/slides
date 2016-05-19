@@ -16,7 +16,7 @@ Dude from Switzerland who likes to code
 ## Ishan
 
 - Started at Codestar in 2015
-- Currently at Wehkamp, team <span style="color: lime;">Lime</span> (Mobile app) 
+- Currently at Wehkamp, team <span style="color: lime;">Lime</span> (Wehkamp Universal App) 
 
 # Wehkamp ![](img/graphql/wehkamp.png){style="height:0.7em;margin-bottom:-0.05em"}
 
@@ -30,7 +30,8 @@ Dude from Switzerland who likes to code
 
 ##
 
-- Switch from .NET monolith to Scala microservices
+- Switch from .NET monolith to Scala microservices (Blaze Architecture)
+- Combination of products/software/applications that are made or bought
 - Using the latest technologies
 - Lots of fun!
 
@@ -45,7 +46,7 @@ Dude from Switzerland who likes to code
 
 ## CI/CD
 
-- Blaze has a strong focus on automation
+- The Blaze Architecture has a strong focus on automation → speed of execution
 - Platform deployed using *Ansible*
 - Builds done on Jenkins, with promotion pipelines and integrated testing
 - All services in containers, deployed on *Mesos*
@@ -63,7 +64,7 @@ Dude from Switzerland who likes to code
 
 ## Architecture
 
-![Simple diagram of the Blaze architecture](img/graphql/blaze-simple.svg){width="70%"}
+![Simple diagram of the Blaze Architecture](img/graphql/blaze-simple.svg){width="70%"}
 
 ## Scala @ Wehkamp
 
@@ -164,9 +165,9 @@ Cons:
 - Resilient: partial results when down, with error detail
 </aside>
 
-## Blaze architecture goals
+## Blaze Architecture goals
 
-- **Lowly coupled**: prevent unnecessary dependencies
+- **Loosely coupled**: prevent unnecessary dependencies
 - **Highly flexible**: enable rapid change
 - **Consistent**
 - **Resilient**
@@ -183,7 +184,7 @@ We find that GraphQL meets some of these goals quite well:
 - **Elastic**: no state, can scale by running multiple GraphQL servers
 - **Resilient**: handles errors quite well. <br> Returns partial results when some services are unreachable
 
-The only goal not met is the **low coupling**, but:
+The only goal not met is the **loose coupling**, but:
 
 - There's no current alternative, everyone has to produce a *mega*-schema
 
