@@ -474,3 +474,15 @@ sub, sup {
   right: 0;
   bottom: 0;
 }
+
+#pressSpace {
+  position: absolute;
+  bottom: 20px;
+  font-size: 1.5em;
+  color: white;
+  opacity: 0.5;
+  font-family: "Conduit";
+  left: 50%;
+  z-index: 999;
+  transform: translateX(-50%);
+}
