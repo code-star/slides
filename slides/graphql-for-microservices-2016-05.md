@@ -49,6 +49,7 @@ Dude from Switzerland who likes to code
     - Deployment
     - Monitoring
     - Alerting
+    - Standby
 
 ## CI/CD
 
