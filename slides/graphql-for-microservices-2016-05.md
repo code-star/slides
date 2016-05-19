@@ -18,10 +18,9 @@ Dude from Switzerland who likes to code
 - Started at Codestar in 2015
 - Currently doing Scala at Wehkamp
     - Team <span style="color: lime; font-size: 1.1em">Lime </span>-- Wehkamp Universal App
-        - back-end
 
 <aside class="notes">
-- Hi! My name is Ishaan. I've been with Codestar since the end of 2015 en on now on my first full-time Scala assignment at Wehkamp. Currently I'm in Team Lime, which is repsonsible for developing the back-end of the android and iOS mobile apps. In the second half of the presentation i'll give you a peek into how this works. But for now i'll give the word back to hamza to talk more about the Wehkamp and it's infrastructure.
+- Hi! My name is Ishaan. I've been with Codestar since the end of 2015 en on now on my first full-time Scala assignment at Wehkamp. Currently I'm in Team Lime, which is repsonsible for developing Wehkamp Universal App for android and iOS. In the second half of the presentation i'll give you a peek into how this works. But for now i'll give the word back to Hamza.
 </aside>
 
 # Wehkamp ![](img/graphql/wehkamp.png){style="height:0.7em;margin-bottom:-0.05em"}
@@ -554,8 +553,8 @@ aimed at the mobile app (for now)
     - what is it? A tightly coupled API geared to one specific client application
     - is also a microservice
 - Used by many companies (term coined by Soundcloud)
-- We do not want logic in apps
 - Define different APIs for each *kind* of client
+- We do not want logic in apps
 - We can do this with GraphQL named queries
 
 </aside>
@@ -579,7 +578,7 @@ Desktop BFF:
 ```
 
 <aside class="notes">
-- How do you call this BFF?
+- How do you get data from this BFF?
 - It's just an namespaced endpoint on our service
 </aside>
 
@@ -637,12 +636,14 @@ GET query-service.blaze/mobile/get_title?id=748002 HTTP/1.1
 - Helpers
 
 <aside class="notes">
-- Two main routes using Spray
-    - Raw GraphQL endpoint
-    - Named queries
+- spray is an open-source toolkit for building REST/HTTP-based integration layers on top of Scala and Akka.
 - Manual schema and resolver implementation
+    - In order to execute queries, you first need to define a schema for your data. 
+    It contains description of objects, interfaces, fields, enums, etc
 - Useful helpers reduce the length and redundancy of the code
-- (Code will be shown later)
+- Code will be shown later
+
+-> Scala...
 </aside>
 
 ## Sangria ![](img/graphql/sangria.svg){style="height:0.7em;margin-bottom:-0.05em"}
@@ -657,6 +658,8 @@ GET query-service.blaze/mobile/get_title?id=748002 HTTP/1.1
 - Already way easier to use after a few updates
 - No alternatives for Scala yet
 - GraphQL spec is still in movement, but Sangria follows closely
+
+--> schema...
 </aside>
 
 ## Schema definition
@@ -680,13 +683,13 @@ case class Recommendation(score: Option[BigDecimal], product_number: Option[Stri
 - We add fields when objects need to be nested
 - Object fields can refer to other objects of the schema
 
-Code snippet Voice-Over
-- Define an object to hold the responses we get from the Recommendation service
-- case class just like a Java class, 2 parameters score and product_number, with type of Option[BigDecimal] and a Option[String]
-- Annotation from Sangria to mark the accessor members of the case class, in this case Recommendation has a field "product"
-- implicit is not important for this example, a context is provided
-- This function returns a Remote[Product]
-- It's implementation is simply calling the remote function with the product_number parameter.
+- Code snippet Voice-Over
+    - Define an object to hold the responses we get from the Recommendation service
+    - case class just like a Java class, 2 parameters score and product_number, with type of Option[BigDecimal] and a Option[String]
+    - Annotation from Sangria to mark the accessor members of the case class, in this case Recommendation has a field "product"
+    - implicit is not important for this example, a context is provided
+    - This function returns a Remote[Product]
+    - It's implementation is simply calling the remote helper function with the product_number parameter.
 </aside>
 ## Resolver definition
 
@@ -702,6 +705,12 @@ First, we need to:
 implicit val RecommendationsResolver: TypedEntityResolver[Recommendations, String] =
   getSingleEntityResolverId("recommendations-gateway", "/$id?panel=pdp_rec")
 ```
+ 
+<aside class="notes">
+Define where to get the values from.
+
+...convert from JsObject to Scala Object
+</aside>
 
 ##
 
@@ -711,7 +720,15 @@ Then, Sangria needs to know how to convert <br> from `JsObject` to our case clas
 private implicit val RecommendationFormat = jsonFormat2(Recommendation)
 ```
 
-Those two lines are the only things we need to write <br> when we need to add a new service.
+Those are the three things we need to write <br> when we need to add a new service.
+
+<aside class="notes">
+- Case Class for the remote object (store in an object)
+- A way to get the data (resolver)
+- A way to convert the json to the object
+
+...magical helper function..
+</aside>
 
 ##
 
@@ -735,7 +752,16 @@ case class GetSingleEntityResolver(serviceKey: String, path: String)
   override def resolve(...) = items map { item ⇒ resolveSingle(item.args) }
 }
 ```
+ 
+<aside class="notes">
+A bit more in depth 
+(what type of object is returned by the Server)
 
+- builds the REST call with the service and endpoint
+- does the request and return a JS Object
+
+...hardcoupling
+</aside>
 ##
 
 - *Hard coupling* between the query service and other services
@@ -743,15 +769,25 @@ case class GetSingleEntityResolver(serviceKey: String, path: String)
 
 Is it worth it? **Yes**:
 
+- Transparent
+- Coupling moved
+- Easy
+- API changes
+- Integration Testing
+
+<aside class="notes">
 - Merging services is done in a transparent way
 - Coupling is not added, but moved
-- The APIs don't change that much
 - Schema easy to write and maintain
+- The APIs don't change that much
 - Integration testing alerts from API changes
+
+... what does this all give us?
+</aside>
 
 ## Named queries
 
-To avoid putting logic in apps, we can use named queries:
+Wrap app logic
 
 ```php
 query($product_numbers: [String!]!) {
@@ -764,28 +800,50 @@ query($product_numbers: [String!]!) {
 }
 ```
 
+- Namespaced
+
+<aside class="notes">
+Don't send, but used stored.
+What do we store in our BFF?
+
+App logic = GraphQL
+To avoid putting logic in apps, we can use named queries:
+
 - Looks like a normal query, wrapped in a `query` object with parameters
 - Stored in namespaces (one for each client BFF, for example `mobile`)
+</aside>
 
 ##
 
+Stored as files:
+
+- Validated
+- Maintainable
+- Version control
+- Compiled 
+
+<aside class="notes">
 In our service, we store named queries in files, which has some advantages:
 
 - They are validated at test time
 - Easy to maintain a folder hierarchy
 - Better for version control
 - All named queries can be compiled at boot time to save resources
+</aside> 
 
 ## Security
+- Internal access GraphQL
+- Public named queries
 
+<aside class="notes">
 - GraphQL only used internally, no outside access
 - Public facing endpoint are named queries, which remove a lot of external control
 - Public access still goes through the rest of the platform for other security checks
+</aside>
 
 # Demo 2
 
 <aside class="notes">
-
 - Query service
     - Add named query (take query from Demo 1)
     - Named query example
