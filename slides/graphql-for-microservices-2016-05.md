@@ -454,6 +454,10 @@ For a given product, we need:
         - Name
         - Main picture
 
+## 
+
+![](img/graphql/tree.png){width=80%}
+
 ## Recursion
 
 <div style="float: left; width: 50%">
