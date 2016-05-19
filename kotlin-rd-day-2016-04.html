@@ -434,7 +434,7 @@ Thank you
   initReveal();
 
   // Maybe also if hash present?
-  if (inIframe()) {
+  if (inIframe() || mobileAndTabletcheck()) {
     var background = document.getElementById("logo-background");
     var logo = document.getElementById("logo");
     background.parentElement.removeChild(background);
@@ -443,27 +443,21 @@ Thank you
     var logo = document.getElementById("logo")
     if(logo !== null) {
       logo.style.display = "block";
-      if (mobileAndTabletcheck()) {
-        Reveal.configure({ keyboard: true });
-        animateLogo();
-        started = true;
-      } else {
-        var div = document.createElement("div");
-        div.id = "pressSpace";
-        div.innerHTML = "Press SPACE"
-        var parent = document.getElementById("logo").parentElement;
-        parent.insertBefore(div, document.getElementById("logo"));
-        document.addEventListener('keypress', function (e) {
-          if (e.keyCode === 0 || e.keyCode === 32) {
-            e.preventDefault();
-            if (!started) {
-              Reveal.configure({ keyboard: true });
-              animateLogo();
-              started = true;
-            }
+      var div = document.createElement("div");
+      div.id = "pressSpace";
+      div.innerHTML = "Press SPACE"
+      var parent = document.getElementById("logo").parentElement;
+      parent.insertBefore(div, document.getElementById("logo"));
+      document.addEventListener('keypress', function (e) {
+        if (e.keyCode === 0 || e.keyCode === 32) {
+          e.preventDefault();
+          if (!started) {
+            Reveal.configure({ keyboard: true });
+            animateLogo();
+            started = true;
           }
-        }, false);
-      }
+        }
+      }, false);
     } else {
       Reveal.configure({ keyboard: true });
     }
