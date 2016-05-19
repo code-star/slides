@@ -125,7 +125,7 @@ $body$
     background.className += " background-fade-out";
 
     if (document.getElementById("pressSpace"))
-      document.body.removeChild(document.getElementById("pressSpace"));
+      document.getElementById("pressSpace").parentElement.removeChild(document.getElementById("pressSpace"));
 
     setTimeout(function() {
       background.parentElement.removeChild(background);
@@ -211,7 +211,11 @@ $body$
         animateLogo();
         started = true;
       } else {
-        document.body.innerHTML += '<div id="pressSpace">Press SPACE</div>';
+        var div = document.createElement("div");
+        div.id = "pressSpace";
+        div.innerHTML = "Press SPACE"
+        var parent = document.getElementById("logo").parentElement;
+        parent.insertBefore(div, document.getElementById("logo"));
         document.addEventListener('keypress', function (e) {
           if (e.keyCode === 0 || e.keyCode === 32) {
             e.preventDefault();
