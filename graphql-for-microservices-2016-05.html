@@ -121,15 +121,12 @@ document.getElementById("qrlink").textContent = url;
 <li>Started at Codestar in 2015</li>
 <li>Currently doing Scala at Wehkamp
 <ul>
-<li>Team <span style="color: lime; font-size: 1.1em">Lime </span>– Wehkamp Universal App
-<ul>
-<li>back-end</li>
-</ul></li>
+<li>Team <span style="color: lime; font-size: 1.1em">Lime </span>– Wehkamp Universal App</li>
 </ul></li>
 </ul>
 <aside class="notes">
 <ul>
-<li>Hi! My name is Ishaan. I’ve been with Codestar since the end of 2015 en on now on my first full-time Scala assignment at Wehkamp. Currently I’m in Team Lime, which is repsonsible for developing the back-end of the android and iOS mobile apps. In the second half of the presentation i’ll give you a peek into how this works. But for now i’ll give the word back to hamza to talk more about the Wehkamp and it’s infrastructure.</li>
+<li>Hi! My name is Ishaan. I’ve been with Codestar since the end of 2015 en on now on my first full-time Scala assignment at Wehkamp. Currently I’m in Team Lime, which is repsonsible for developing Wehkamp Universal App for android and iOS. In the second half of the presentation i’ll give you a peek into how this works. But for now i’ll give the word back to Hamza.</li>
 </ul>
 </aside>
 </section>
@@ -752,8 +749,8 @@ We need to demo: - GrapiQL - Introspection
 <li>is also a microservice</li>
 </ul></li>
 <li>Used by many companies (term coined by Soundcloud)</li>
-<li>We do not want logic in apps</li>
 <li>Define different APIs for each <em>kind</em> of client</li>
+<li>We do not want logic in apps</li>
 <li>We can do this with GraphQL named queries</li>
 </ul>
 </aside>
@@ -770,7 +767,7 @@ We need to demo: - GrapiQL - Introspection
 ...</code></pre>
 <aside class="notes">
 <ul>
-<li>How do you call this BFF?</li>
+<li>How do you get data from this BFF?</li>
 <li>It’s just an namespaced endpoint on our service</li>
 </ul>
 </aside>
@@ -840,15 +837,15 @@ We need to demo: - GrapiQL - Introspection
 </ul>
 <aside class="notes">
 <ul>
-<li>Two main routes using Spray
+<li>spray is an open-source toolkit for building REST/HTTP-based integration layers on top of Scala and Akka.</li>
+<li>Manual schema and resolver implementation
 <ul>
-<li>Raw GraphQL endpoint</li>
-<li>Named queries</li>
+<li>In order to execute queries, you first need to define a schema for your data. It contains description of objects, interfaces, fields, enums, etc</li>
 </ul></li>
-<li>Manual schema and resolver implementation</li>
 <li>Useful helpers reduce the length and redundancy of the code</li>
-<li>(Code will be shown later)</li>
+<li>Code will be shown later</li>
 </ul>
+-&gt; Scala…
 </aside>
 </section>
 <section id="sangria" class="level2">
@@ -866,6 +863,7 @@ We need to demo: - GrapiQL - Introspection
 <li>No alternatives for Scala yet</li>
 <li>GraphQL spec is still in movement, but Sangria follows closely</li>
 </ul>
+–&gt; schema…
 </aside>
 </section>
 <section id="schema-definition" class="level2">
@@ -886,9 +884,17 @@ We need to demo: - GrapiQL - Introspection
 <li>Schema objects defined with Scala case classes</li>
 <li>Straight forward thanks to helpers and macros</li>
 <li>We add fields when objects need to be nested</li>
-<li>Object fields can refer to other objects of the schema</li>
+<li><p>Object fields can refer to other objects of the schema</p></li>
+<li>Code snippet Voice-Over
+<ul>
+<li>Define an object to hold the responses we get from the Recommendation service</li>
+<li>case class just like a Java class, 2 parameters score and product_number, with type of Option[BigDecimal] and a Option[String]</li>
+<li>Annotation from Sangria to mark the accessor members of the case class, in this case Recommendation has a field “product”</li>
+<li>implicit is not important for this example, a context is provided</li>
+<li>This function returns a Remote[Product]</li>
+<li>It’s implementation is simply calling the remote helper function with the product_number parameter.</li>
+</ul></li>
 </ul>
-Code snippet Voice-Over - Define an object to hold the responses we get from the Recommendation service - case class just like a Java class, 2 parameters score and product_number, with type of Option[BigDecimal] and a Option[String] - Annotation from Sangria to mark the accessor members of the case class, in this case Recommendation has a field “product” - implicit is not important for this example, a context is provided - This function returns a Remote[Product] - It’s implementation is simply calling the remote function with the product_number parameter.
 </aside>
 </section>
 <section id="resolver-definition" class="level2">
@@ -905,12 +911,24 @@ Code snippet Voice-Over - Define an object to hold the responses we get from the
 </ul>
 <pre class="scala"><code>implicit val RecommendationsResolver: TypedEntityResolver[Recommendations, String] =
   getSingleEntityResolverId(&quot;recommendations-gateway&quot;, &quot;/$id?panel=pdp_rec&quot;)</code></pre>
+<aside class="notes">
+<p>Define where to get the values from.</p>
+…convert from JsObject to Scala Object
+</aside>
 </section>
 <section id="section-19" class="level2">
 <h2></h2>
 <p>Then, Sangria needs to know how to convert <br> from <code>JsObject</code> to our case class <code>Recommendation</code></p>
 <pre class="scala"><code>private implicit val RecommendationFormat = jsonFormat2(Recommendation)</code></pre>
-<p>Those two lines are the only things we need to write <br> when we need to add a new service.</p>
+<p>Those are the three things we need to write <br> when we need to add a new service.</p>
+<aside class="notes">
+<ul>
+<li>Case Class for the remote object (store in an object)</li>
+<li>A way to get the data (resolver)</li>
+<li>A way to convert the json to the object</li>
+</ul>
+…magical helper function..
+</aside>
 </section>
 <section id="section-20" class="level2">
 <h2></h2>
@@ -933,6 +951,14 @@ Code snippet Voice-Over - Define an object to hold the responses we get from the
 
   override def resolve(...) = items map { item ⇒ resolveSingle(item.args) }
 }</code></pre>
+<aside class="notes">
+<p>A bit more in depth (what type of object is returned by the Server)</p>
+<ul>
+<li>builds the REST call with the service and endpoint</li>
+<li>does the request and return a JS Object</li>
+</ul>
+…hardcoupling
+</aside>
 </section>
 <section id="section-21" class="level2">
 <h2></h2>
@@ -942,16 +968,26 @@ Code snippet Voice-Over - Define an object to hold the responses we get from the
 </ul>
 <p>Is it worth it? <strong>Yes</strong>:</p>
 <ul>
+<li>Transparent</li>
+<li>Coupling moved</li>
+<li>Easy</li>
+<li>API changes</li>
+<li>Integration Testing</li>
+</ul>
+<aside class="notes">
+<ul>
 <li>Merging services is done in a transparent way</li>
 <li>Coupling is not added, but moved</li>
-<li>The APIs don’t change that much</li>
 <li>Schema easy to write and maintain</li>
+<li>The APIs don’t change that much</li>
 <li>Integration testing alerts from API changes</li>
 </ul>
+… what does this all give us?
+</aside>
 </section>
 <section id="named-queries" class="level2">
 <h2>Named queries</h2>
-<p>To avoid putting logic in apps, we can use named queries:</p>
+<p>Wrap app logic</p>
 <pre class="php"><code>query($product_numbers: [String!]!) {
   products(product_numbers: $product_numbers) {
     title
@@ -961,12 +997,27 @@ Code snippet Voice-Over - Define an object to hold the responses we get from the
   }
 }</code></pre>
 <ul>
+<li>Namespaced</li>
+</ul>
+<aside class="notes">
+<p>Don’t send, but used stored. What do we store in our BFF?</p>
+<p>App logic = GraphQL To avoid putting logic in apps, we can use named queries:</p>
+<ul>
 <li>Looks like a normal query, wrapped in a <code>query</code> object with parameters</li>
 <li>Stored in namespaces (one for each client BFF, for example <code>mobile</code>)</li>
 </ul>
+</aside>
 </section>
 <section id="section-22" class="level2">
 <h2></h2>
+<p>Stored as files:</p>
+<ul>
+<li>Validated</li>
+<li>Maintainable</li>
+<li>Version control</li>
+<li>Compiled</li>
+</ul>
+<aside class="notes">
 <p>In our service, we store named queries in files, which has some advantages:</p>
 <ul>
 <li>They are validated at test time</li>
@@ -974,14 +1025,21 @@ Code snippet Voice-Over - Define an object to hold the responses we get from the
 <li>Better for version control</li>
 <li>All named queries can be compiled at boot time to save resources</li>
 </ul>
+</aside>
 </section>
 <section id="security" class="level2">
 <h2>Security</h2>
+<ul>
+<li>Internal access GraphQL</li>
+<li>Public named queries</li>
+</ul>
+<aside class="notes">
 <ul>
 <li>GraphQL only used internally, no outside access</li>
 <li>Public facing endpoint are named queries, which remove a lot of external control</li>
 <li>Public access still goes through the rest of the platform for other security checks</li>
 </ul>
+</aside>
 </section>
 </section>
 <section id="demo-2" class="level1">
