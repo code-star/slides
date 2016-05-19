@@ -7,8 +7,8 @@
 
 <meta name="description" content="GraphQL <br> for Microservices">    
 
-  <meta name="author" content="H. Haiken" />
-  <meta name="author" content="I. Sital" />
+  <meta name="author" content="Hamza Haiken" />
+  <meta name="author" content="Ishan Sital" />
 
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -56,7 +56,7 @@
 
 <section style="height: 100%;">
 <h1>GraphQL <br> for Microservices</h1>
-<h3>H. Haiken</h3><h3>I. Sital</h3>
+<h3>Hamza Haiken</h3><h3>Ishan Sital</h3>
 <p>
 <h4>19 May 2016</h4>
 </p>
@@ -97,6 +97,7 @@ document.getElementById("qrlink").textContent = url;
     <li><a href="#demo-1">Demo 1</a></li>
     <li><a href="#query-service">Query service</a></li>
     <li><a href="#demo-2">Demo 2</a></li>
+    <li><a href="#alternatives">Alternatives</a></li>
     <li><a href="#conclusion">Conclusion</a></li>
     <li><a href="#questions">Questions</a></li>
     </ul>
@@ -118,8 +119,19 @@ document.getElementById("qrlink").textContent = url;
 <h2>Ishan</h2>
 <ul>
 <li>Started at Codestar in 2015</li>
-<li>Currently at Wehkamp, team <span style="color: lime;">Lime</span> (Mobile app)</li>
+<li>Currently doing Scala at Wehkamp
+<ul>
+<li>Team <span style="color: lime; font-size: 1.1em">Lime </span>– Wehkamp Universal App
+<ul>
+<li>back-end</li>
+</ul></li>
+</ul></li>
 </ul>
+<aside class="notes">
+<ul>
+<li>Hi! My name is Ishaan. I’ve been with Codestar since the end of 2015 en on now on my first full-time Scala assignment at Wehkamp. Currently I’m in Team Lime, which is repsonsible for developing the back-end of the android and iOS mobile apps. In the second half of the presentation i’ll give you a peek into how this works. But for now i’ll give the word back to hamza to talk more about the Wehkamp and it’s infrastructure.</li>
+</ul>
+</aside>
 </section>
 </section>
 <section id="wehkamp" class="level1">
@@ -139,7 +151,8 @@ document.getElementById("qrlink").textContent = url;
 <section id="section-2" class="level2">
 <h2></h2>
 <ul>
-<li>Switch from .NET monolith to Scala microservices</li>
+<li>Switch from .NET monolith to Scala microservices (Blaze Architecture)</li>
+<li>Combination of products/software/applications that are made or bought</li>
 <li>Using the latest technologies</li>
 <li>Lots of fun!</li>
 </ul>
@@ -160,7 +173,7 @@ document.getElementById("qrlink").textContent = url;
 <section id="cicd" class="level2">
 <h2>CI/CD</h2>
 <ul>
-<li>Blaze has a strong focus on automation</li>
+<li>The Blaze Architecture has a strong focus on automation → speed of execution</li>
 <li>Platform deployed using <em>Ansible</em></li>
 <li>Builds done on Jenkins, with promotion pipelines and integrated testing</li>
 <li>All services in containers, deployed on <em>Mesos</em></li>
@@ -184,7 +197,7 @@ document.getElementById("qrlink").textContent = url;
 <section id="architecture" class="level2">
 <h2>Architecture</h2>
 <figure>
-<img src="img/graphql/blaze-simple.svg" alt="Simple diagram of the Blaze architecture" style="width:70.0%" /><figcaption>Simple diagram of the Blaze architecture</figcaption>
+<img src="img/graphql/blaze-simple.svg" alt="Simple diagram of the Blaze Architecture" style="width:70.0%" /><figcaption>Simple diagram of the Blaze Architecture</figcaption>
 </figure>
 </section>
 <section id="scala-wehkamp" class="level2">
@@ -315,9 +328,9 @@ Non-trivial resolver implementation
 </aside>
 </section>
 <section id="blaze-architecture-goals" class="level2">
-<h2>Blaze architecture goals</h2>
+<h2>Blaze Architecture goals</h2>
 <ul>
-<li><strong>Lowly coupled</strong>: prevent unnecessary dependencies</li>
+<li><strong>Loosely coupled</strong>: prevent unnecessary dependencies</li>
 <li><strong>Highly flexible</strong>: enable rapid change</li>
 <li><strong>Consistent</strong></li>
 <li><strong>Resilient</strong></li>
@@ -335,7 +348,7 @@ Non-trivial resolver implementation
 <li><strong>Elastic</strong>: no state, can scale by running multiple GraphQL servers</li>
 <li><strong>Resilient</strong>: handles errors quite well. <br> Returns partial results when some services are unreachable</li>
 </ul>
-<p>The only goal not met is the <strong>low coupling</strong>, but:</p>
+<p>The only goal not met is the <strong>loose coupling</strong>, but:</p>
 <ul>
 <li>There’s no current alternative, everyone has to produce a <em>mega</em>-schema</li>
 </ul>
@@ -693,10 +706,7 @@ Non-trivial resolver implementation
 <section id="demo-1" class="level1">
 <h1>Demo 1</h1>
 <aside class="notes">
-<p>We need to demo:</p>
-<ul>
-<li>Introspection</li>
-</ul>
+We need to demo: - GrapiQL - Introspection
 </aside>
 </section>
 <section id="query-service" class="level1">
@@ -704,18 +714,41 @@ Non-trivial resolver implementation
 <section id="section-16" class="level2">
 <h2></h2>
 <p>Given all the goals cited earlier,</p>
-<p>we set out to create a query service,</p>
+<p>we set out to create a Query Service,</p>
 <p>aimed at the mobile app (for now)</p>
+<aside class="notes">
+<ul>
+<li>Give short summary of previously defined goals</li>
+<li>what are going to talk about now?
+<ul>
+<li>Architecture</li>
+<li>Wiring it together with Scala</li>
+<li>Demo</li>
+<li>Alternatives</li>
+</ul></li>
+</ul>
+</aside>
 </section>
 <section id="bff-pattern" class="level2">
 <h2>“BFF” Pattern</h2>
 <ul>
-<li>This kind of service is also called BFF: “Backends For Frontends”</li>
+<li>“Backends For Frontends”</li>
+<li>Mobile App logic</li>
+<li>Named Queries</li>
+</ul>
+<aside class="notes">
+<ul>
+<li>This kind of service is also called BFF: “Backends For Frontends”
+<ul>
+<li>what is it? A tightly coupled API geared to one specific client application</li>
+<li>is also a microservice</li>
+</ul></li>
 <li>Used by many companies (term coined by Soundcloud)</li>
 <li>We do not want logic in apps</li>
 <li>Define different APIs for each <em>kind</em> of client</li>
 <li>We can do this with GraphQL named queries</li>
 </ul>
+</aside>
 </section>
 <section id="examples-1" class="level2">
 <h2>Examples</h2>
@@ -727,9 +760,26 @@ Non-trivial resolver implementation
 <pre><code>/desktop/product_informations?id=ID
 /desktop/recommendation_tree?id=ID
 ...</code></pre>
+<aside class="notes">
+<ul>
+<li>How do you call this BFF?</li>
+<li>It’s just an namespaced endpoint on our service</li>
+</ul>
+</aside>
 </section>
 <section id="microservice-architecture" class="level2">
 <h2>Microservice architecture</h2>
+<ul>
+<li>Scattered data</li>
+<li>Network costs</li>
+<li>“BFF” fit</li>
+<li>Dual functionality:
+<ul>
+<li>Named Query BFF</li>
+<li>Internal GraphQL endpoint</li>
+</ul></li>
+</ul>
+<aside class="notes">
 <ul>
 <li>Data scattered across multiple services</li>
 <li>Internal hops have no cost</li>
@@ -740,6 +790,7 @@ Non-trivial resolver implementation
 <li>Internal GraphQL endpoint for internal services</li>
 </ul></li>
 </ul>
+</aside>
 </section>
 <section id="section-17" class="level2">
 <h2></h2>
@@ -752,56 +803,85 @@ Non-trivial resolver implementation
 }</code></pre>
 <p>Named query BFF</p>
 <pre class="http"><code>GET query-service.blaze/mobile/get_title?id=748002 HTTP/1.1</code></pre>
+<aside class="notes">
+<ul>
+<li>Both API calls give the same result</li>
+<li><ol type="1">
+<li>posts the query to be executed</li>
+</ol></li>
+<li><ol start="2" type="1">
+<li>gets defined the endpoint for the title</li>
+</ol>
+<ul>
+<li>under water the graphql is executed to yield the same result</li>
+</ul></li>
+</ul>
+</aside>
 </section>
 <section id="query-service-architecture" class="level2">
 <h2>Query service architecture</h2>
 <ul>
 <li>Two main routes using Spray
 <ul>
+<li>Named Queries BFF endpoint</li>
+<li>Raw GraphQL endpoint</li>
+</ul></li>
+<li>Schema</li>
+<li>Resolvers</li>
+<li>Helpers</li>
+</ul>
+<aside class="notes">
+<ul>
+<li>Two main routes using Spray
+<ul>
 <li>Raw GraphQL endpoint</li>
 <li>Named queries</li>
 </ul></li>
-<li>Useful helpers reduce the length and redundancy of the code</li>
 <li>Manual schema and resolver implementation</li>
+<li>Useful helpers reduce the length and redundancy of the code</li>
+<li>(Code will be shown later)</li>
 </ul>
+</aside>
 </section>
 <section id="sangria" class="level2">
 <h2>Sangria <img src="img/graphql/sangria.svg" style="height:0.7em;margin-bottom:-0.05em" /></h2>
 <ul>
+<li>Young library</li>
+<li>Scala alternatives?</li>
+<li>Up-to-date</li>
+</ul>
+<aside class="notes">
+<ul>
 <li>When we started the POC, it was a bit cumbersome (needed lots of helper functions)</li>
 <li>Library is young, updates all the time</li>
 <li>Already way easier to use after a few updates</li>
+<li>No alternatives for Scala yet</li>
 <li>GraphQL spec is still in movement, but Sangria follows closely</li>
 </ul>
+</aside>
 </section>
 <section id="schema-definition" class="level2">
 <h2>Schema definition</h2>
 <ul>
-<li>Schema objects defined with case classes</li>
-<li>Straight forward thanks to helpers and macros</li>
-<li>Reflects the JSON schema of REST API responses from services</li>
-<li>We add fields when objects need to be nested</li>
-<li>Object fields can refer to other objects of the schema</li>
+<li>Map JSON responses from external services</li>
+<li>case classes</li>
+<li>Nesting</li>
+<li>Reference to other objects</li>
 </ul>
 <pre class="scala"><code>case class Recommendation(score: Option[BigDecimal], product_number: Option[String]) {
   @GraphQLField
   def product(implicit ctx: Ctx): Remote[Product] = remote(product_number)
 }</code></pre>
-</section>
-<section id="section-18" class="level2">
-<h2></h2>
+<aside class="notes">
 <ul>
-<li><em>Hard coupling</em> between the query service and other services</li>
-<li>Also need to actively <em>maintain</em> a schema</li>
+<li>Reflects the JSON schema of REST API responses from external services</li>
+<li>Schema objects defined with Scala case classes</li>
+<li>Straight forward thanks to helpers and macros</li>
+<li>We add fields when objects need to be nested</li>
+<li>Object fields can refer to other objects of the schema</li>
 </ul>
-<p>Is it worth it? Yes:</p>
-<ul>
-<li>Merging services is done in a transparent way</li>
-<li>Coupling is not added, but moved</li>
-<li>The APIs don’t change that much</li>
-<li>Schema easy to write and maintain</li>
-<li>Integration testing alerts from API changes</li>
-</ul>
+Code snippet Voice-Over - Define an object to hold the responses we get from the Recommendation service - case class just like a Java class, 2 parameters score and product_number, with type of Option[BigDecimal] and a Option[String] - Annotation from Sangria to mark the accessor members of the case class, in this case Recommendation has a field “product” - implicit is not important for this example, a context is provided - This function returns a Remote[Product] - It’s implementation is simply calling the remote function with the product_number parameter.
+</aside>
 </section>
 <section id="resolver-definition" class="level2">
 <h2>Resolver definition</h2>
@@ -818,13 +898,13 @@ Non-trivial resolver implementation
 <pre class="scala"><code>implicit val RecommendationsResolver: TypedEntityResolver[Recommendations, String] =
   getSingleEntityResolverId(&quot;recommendations-gateway&quot;, &quot;/$id?panel=pdp_rec&quot;)</code></pre>
 </section>
-<section id="section-19" class="level2">
+<section id="section-18" class="level2">
 <h2></h2>
 <p>Then, Sangria needs to know how to convert <br> from <code>JsObject</code> to our case class <code>Recommendation</code></p>
 <pre class="scala"><code>private implicit val RecommendationFormat = jsonFormat2(Recommendation)</code></pre>
 <p>Those two lines are the only things we need to write <br> when we need to add a new service.</p>
 </section>
-<section id="section-20" class="level2">
+<section id="section-19" class="level2">
 <h2></h2>
 <ul>
 <li>Sangria needs a <code>TypedEntityResolver</code> class that knows where to get data</li>
@@ -837,7 +917,7 @@ Non-trivial resolver implementation
       (implicit ctx: GraphQlContext): Future[Option[JsObject]] = {
     val request = HttpRequest(
       HttpMethods.GET,
-      replaceUriPlaceholders(Uri(ctx.services(serviceKey) + path), replace),
+      replaceUriPlaceholders(Uri(ctx.services(serviceKey) + path), replace), 
       ...
     )
     ctx.sendReceive(request).map(parseJsonObject)
@@ -845,6 +925,21 @@ Non-trivial resolver implementation
 
   override def resolve(...) = items map { item ⇒ resolveSingle(item.args) }
 }</code></pre>
+</section>
+<section id="section-20" class="level2">
+<h2></h2>
+<ul>
+<li><em>Hard coupling</em> between the query service and other services</li>
+<li>Also need to actively <em>maintain</em> a schema</li>
+</ul>
+<p>Is it worth it? <strong>Yes</strong>:</p>
+<ul>
+<li>Merging services is done in a transparent way</li>
+<li>Coupling is not added, but moved</li>
+<li>The APIs don’t change that much</li>
+<li>Schema easy to write and maintain</li>
+<li>Integration testing alerts from API changes</li>
+</ul>
 </section>
 <section id="named-queries" class="level2">
 <h2>Named queries</h2>
@@ -898,18 +993,10 @@ Non-trivial resolver implementation
 </ul>
 </aside>
 </section>
-<section id="conclusion" class="level1">
-<h1>Conclusion</h1>
-<section id="results" class="level2">
-<h2>Results</h2>
-<ul>
-<li>Less data used: between 10% and 20% of original response sizes</li>
-<li>Less connections: only one connection for everything</li>
-<li>Tailored responses: only get what was asked for</li>
-</ul>
-</section>
-<section id="alternatives" class="level2">
-<h2>Alternatives</h2>
+<section id="alternatives" class="level1">
+<h1>Alternatives</h1>
+<section id="section-22" class="level2">
+<h2></h2>
 <p>Before jumping in with GraphQL, we also investigated:</p>
 <p><img src="img/graphql/finagle.png" style="height:4.95em;margin-bottom:-0.05em; border-radius: 5px;" /> <img src="img/graphql/falcor.svg" style="background: black; padding: 10px; border-radius: 5px; height:4.5em;margin-bottom:-0.05em" /></p>
 <p>Both had more cons than pros compared to GraphQL</p>
@@ -931,6 +1018,17 @@ Non-trivial resolver implementation
 <li>Falcor is a <em>JavaScript</em> server <em>application</em></li>
 </ul>
 </section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<section id="results" class="level2">
+<h2>Results</h2>
+<ul>
+<li>Less data used: between 10% and 20% of original response sizes</li>
+<li>Less connections: only one connection for everything</li>
+<li>Tailored responses: only get what was asked for</li>
+</ul>
+</section>
 <section id="aftermath" class="level2">
 <h2>Aftermath</h2>
 <ul>
@@ -938,6 +1036,16 @@ Non-trivial resolver implementation
 <li>Current development app uses the new named queries</li>
 <li>Investment in the schema enables us to re-use it</li>
 </ul>
+<aside class="notes">
+<ul>
+<li>named queries can be added easily.</li>
+<li>Front-end centered, you ask from the service what you need
+<ul>
+<li>When data could not be queried, we need to add it to the schema once</li>
+<li>after that we can reuse it</li>
+</ul></li>
+</ul>
+</aside>
 </section>
 <section id="future" class="level2">
 <h2>Future</h2>
@@ -945,17 +1053,26 @@ Non-trivial resolver implementation
 <li>Automatic schema generation through documentation</li>
 <li>Add more BFFs </li>
 </ul>
+<aside class="notes">
+<ul>
+<li>use service descriptors to automatically create schema’s, less work
+<ul>
+<li>no know solutions yet</li>
+</ul></li>
+<li>connect website, TV apps, VR ? all get there on BFF</li>
+</ul>
+</aside>
 </section>
 </section>
 <section id="questions" class="level1">
 <h1>Questions</h1>
-<section id="section-22" class="level2">
+<section id="section-23" class="level2">
 <h2></h2>
 <p class="huge">
 ?
 </p>
 </section>
-<section id="section-23" class="level2">
+<section id="section-24" class="level2">
 <h2></h2>
 <br><br><br>
 <p class="big">
