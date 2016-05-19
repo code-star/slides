@@ -632,6 +632,12 @@ Non-trivial resolver implementation
 </ul></li>
 </ul>
 </section>
+<section id="section-15" class="level2">
+<h2></h2>
+<figure>
+<img src="img/graphql/tree.png" style="width:80.0%" />
+</figure>
+</section>
 <section id="recursion" class="level2">
 <h2>Recursion</h2>
 <div style="float: left; width: 50%">
@@ -676,7 +682,7 @@ Non-trivial resolver implementation
 }</code></pre>
 </div>
 </section>
-<section id="section-15" class="level2">
+<section id="section-16" class="level2">
 <h2></h2>
 <table>
 <caption>Effective size of useful/needed data: ~5KiB <br> (111 products, titles and image names) <br><br></caption>
@@ -713,7 +719,7 @@ We need to demo: - GrapiQL - Introspection
 </section>
 <section id="query-service" class="level1">
 <h1>Query service</h1>
-<section id="section-16" class="level2">
+<section id="section-17" class="level2">
 <h2></h2>
 <p>Given all the goals cited earlier,</p>
 <p>we set out to create a Query Service,</p>
@@ -794,7 +800,7 @@ We need to demo: - GrapiQL - Introspection
 </ul>
 </aside>
 </section>
-<section id="section-17" class="level2">
+<section id="section-18" class="level2">
 <h2></h2>
 <p>Raw GraphQL</p>
 <pre class="http"><code>POST query-service.blaze/graphql HTTP/1.1
@@ -900,13 +906,13 @@ Code snippet Voice-Over - Define an object to hold the responses we get from the
 <pre class="scala"><code>implicit val RecommendationsResolver: TypedEntityResolver[Recommendations, String] =
   getSingleEntityResolverId(&quot;recommendations-gateway&quot;, &quot;/$id?panel=pdp_rec&quot;)</code></pre>
 </section>
-<section id="section-18" class="level2">
+<section id="section-19" class="level2">
 <h2></h2>
 <p>Then, Sangria needs to know how to convert <br> from <code>JsObject</code> to our case class <code>Recommendation</code></p>
 <pre class="scala"><code>private implicit val RecommendationFormat = jsonFormat2(Recommendation)</code></pre>
 <p>Those two lines are the only things we need to write <br> when we need to add a new service.</p>
 </section>
-<section id="section-19" class="level2">
+<section id="section-20" class="level2">
 <h2></h2>
 <ul>
 <li>Sangria needs a <code>TypedEntityResolver</code> class that knows where to get data</li>
@@ -928,7 +934,7 @@ Code snippet Voice-Over - Define an object to hold the responses we get from the
   override def resolve(...) = items map { item ⇒ resolveSingle(item.args) }
 }</code></pre>
 </section>
-<section id="section-20" class="level2">
+<section id="section-21" class="level2">
 <h2></h2>
 <ul>
 <li><em>Hard coupling</em> between the query service and other services</li>
@@ -959,7 +965,7 @@ Code snippet Voice-Over - Define an object to hold the responses we get from the
 <li>Stored in namespaces (one for each client BFF, for example <code>mobile</code>)</li>
 </ul>
 </section>
-<section id="section-21" class="level2">
+<section id="section-22" class="level2">
 <h2></h2>
 <p>In our service, we store named queries in files, which has some advantages:</p>
 <ul>
@@ -997,7 +1003,7 @@ Code snippet Voice-Over - Define an object to hold the responses we get from the
 </section>
 <section id="alternatives" class="level1">
 <h1>Alternatives</h1>
-<section id="section-22" class="level2">
+<section id="section-23" class="level2">
 <h2></h2>
 <p>Before jumping in with GraphQL, we also investigated:</p>
 <p><img src="img/graphql/finagle.png" style="height:4.95em;margin-bottom:-0.05em; border-radius: 5px;" /> <img src="img/graphql/falcor.svg" style="background: black; padding: 10px; border-radius: 5px; height:4.5em;margin-bottom:-0.05em" /></p>
@@ -1068,13 +1074,13 @@ Code snippet Voice-Over - Define an object to hold the responses we get from the
 </section>
 <section id="questions" class="level1">
 <h1>Questions</h1>
-<section id="section-23" class="level2">
+<section id="section-24" class="level2">
 <h2></h2>
 <p class="huge">
 ?
 </p>
 </section>
-<section id="section-24" class="level2">
+<section id="section-25" class="level2">
 <h2></h2>
 <br><br><br>
 <p class="big">
