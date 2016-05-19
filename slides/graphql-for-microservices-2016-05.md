@@ -55,7 +55,8 @@ Dude from Switzerland who likes to code
 - The Blaze Architecture has a strong focus on automation → speed of execution
 - Platform deployed using *Ansible*
 - Builds done on Jenkins, with promotion pipelines and integrated testing
-- All services in containers, deployed on *Mesos*
+- All services in Docker containers
+- Containers run on *Mesos*, managed by *Marathon*
 
 ## Microservices
 
