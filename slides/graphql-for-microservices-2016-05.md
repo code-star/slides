@@ -1,6 +1,6 @@
 % GraphQL <br> for Microservices
-% H. Haiken
-  I. Sital
+% Hamza Haiken
+  Ishan Sital
 % 19 May 2016
 
 # Who are we?
@@ -16,7 +16,13 @@ Dude from Switzerland who likes to code
 ## Ishan
 
 - Started at Codestar in 2015
-- Currently at Wehkamp, team <span style="color: lime;">Lime</span> (Wehkamp Universal App) 
+- Currently doing Scala at Wehkamp
+    - Team <span style="color: lime; font-size: 1.1em">Lime </span>-- Wehkamp Universal App
+        - back-end
+
+<aside class="notes">
+- Hi! My name is Ishaan. I've been with Codestar since the end of 2015 en on now on my first full-time Scala assignment at Wehkamp. Currently I'm in Team Lime, which is repsonsible for developing the back-end of the android and iOS mobile apps. In the second half of the presentation i'll give you a peek into how this works. But for now i'll give the word back to hamza to talk more about the Wehkamp and it's infrastructure.
+</aside>
 
 # Wehkamp ![](img/graphql/wehkamp.png){style="height:0.7em;margin-bottom:-0.05em"}
 
@@ -508,7 +514,7 @@ GraphQL   |           1 |          ~29KiB |      17.2%
 
 <aside class="notes">
 We need to demo:
-
+- GrapiQL
 - Introspection
 </aside>
 
@@ -518,17 +524,35 @@ We need to demo:
 
 Given all the goals cited earlier,
 
-we set out to create a query service,
+we set out to create a Query Service,
 
 aimed at the mobile app (for now)
 
+<aside class="notes">
+- Give short summary of previously defined goals
+- what are going to talk about now?
+    - Architecture
+    - Wiring it together with Scala
+    - Demo
+    - Alternatives
+</aside>
+
 ## "BFF" Pattern
 
+- "Backends For Frontends"
+- Mobile App logic
+- Named Queries
+
+<aside class="notes">
 - This kind of service is also called BFF: "Backends For Frontends"
+    - what is it? A tightly coupled API geared to one specific client application
+    - is also a microservice
 - Used by many companies (term coined by Soundcloud)
 - We do not want logic in apps
 - Define different APIs for each *kind* of client
 - We can do this with GraphQL named queries
+
+</aside>
 
 ## Examples
 
@@ -548,14 +572,28 @@ Desktop BFF:
 ...
 ```
 
+<aside class="notes">
+- How do you call this BFF?
+- It's just an namespaced endpoint on our service
+</aside>
+
 ## Microservice architecture
 
+- Scattered data
+- Network costs
+- "BFF" fit
+- Dual functionality:
+    - Named Query BFF
+    - Internal GraphQL endpoint
+    
+<aside class="notes">
 - Data scattered across multiple services
 - Internal hops have no cost
 - "BFF" fits perfectly as an internal microservice
 - Dual functionality:
     - Named query BFF for mobile clients
     - Internal GraphQL endpoint for internal services
+</aside>
 
 ##
 
@@ -574,28 +612,53 @@ Named query BFF
 GET query-service.blaze/mobile/get_title?id=748002 HTTP/1.1
 ```
 
+<aside class="notes">
+- Both API calls give the same result
+- 1. posts the query to be executed
+- 2. gets defined the endpoint for the title
+    - under water the graphql is executed to yield the same result
+</aside>
+
+
 ## Query service architecture
 
 - Two main routes using Spray
+    - Named Queries BFF endpoint
+    - Raw GraphQL endpoint
+
+- Schema
+- Resolvers
+- Helpers
+
+<aside class="notes">
+- Two main routes using Spray
     - Raw GraphQL endpoint
     - Named queries
-- Useful helpers reduce the length and redundancy of the code
 - Manual schema and resolver implementation
+- Useful helpers reduce the length and redundancy of the code
+- (Code will be shown later)
+</aside>
 
 ## Sangria ![](img/graphql/sangria.svg){style="height:0.7em;margin-bottom:-0.05em"}
 
+- Young library
+- Scala alternatives?
+- Up-to-date
+
+<aside class="notes">
 - When we started the POC, it was a bit cumbersome (needed lots of helper functions)
 - Library is young, updates all the time
 - Already way easier to use after a few updates
+- No alternatives for Scala yet
 - GraphQL spec is still in movement, but Sangria follows closely
+</aside>
 
 ## Schema definition
 
-- Schema objects defined with case classes
-- Straight forward thanks to helpers and macros
-- Reflects the JSON schema of REST API responses from services
-- We add fields when objects need to be nested
-- Object fields can refer to other objects of the schema
+- Map JSON responses from external services
+- case classes
+- Nesting
+- Reference to other objects
 
 ```scala
 case class Recommendation(score: Option[BigDecimal], product_number: Option[String]) {
@@ -604,19 +667,21 @@ case class Recommendation(score: Option[BigDecimal], product_number: Option[Stri
 }
 ```
 
-##
+<aside class="notes">
+- Reflects the JSON schema of REST API responses from external services
+- Schema objects defined with Scala case classes
+- Straight forward thanks to helpers and macros
+- We add fields when objects need to be nested
+- Object fields can refer to other objects of the schema
 
-- *Hard coupling* between the query service and other services
--  Also need to actively *maintain* a schema
-
-Is it worth it? Yes:
-
-- Merging services is done in a transparent way
-- Coupling is not added, but moved
-- The APIs don't change that much
-- Schema easy to write and maintain
-- Integration testing alerts from API changes
-
+Code snippet Voice-Over
+- Define an object to hold the responses we get from the Recommendation service
+- case class just like a Java class, 2 parameters score and product_number, with type of Option[BigDecimal] and a Option[String]
+- Annotation from Sangria to mark the accessor members of the case class, in this case Recommendation has a field "product"
+- implicit is not important for this example, a context is provided
+- This function returns a Remote[Product]
+- It's implementation is simply calling the remote function with the product_number parameter.
+</aside>
 ## Resolver definition
 
 First, we need to:
@@ -655,7 +720,7 @@ case class GetSingleEntityResolver(serviceKey: String, path: String)
       (implicit ctx: GraphQlContext): Future[Option[JsObject]] = {
     val request = HttpRequest(
       HttpMethods.GET,
-      replaceUriPlaceholders(Uri(ctx.services(serviceKey) + path), replace),
+      replaceUriPlaceholders(Uri(ctx.services(serviceKey) + path), replace), 
       ...
     )
     ctx.sendReceive(request).map(parseJsonObject)
@@ -664,6 +729,19 @@ case class GetSingleEntityResolver(serviceKey: String, path: String)
   override def resolve(...) = items map { item ⇒ resolveSingle(item.args) }
 }
 ```
+
+##
+
+- *Hard coupling* between the query service and other services
+-  Also need to actively *maintain* a schema
+
+Is it worth it? **Yes**:
+
+- Merging services is done in a transparent way
+- Coupling is not added, but moved
+- The APIs don't change that much
+- Schema easy to write and maintain
+- Integration testing alerts from API changes
 
 ## Named queries
 
@@ -710,21 +788,16 @@ In our service, we store named queries in files, which has some advantages:
     - Resolvers
 </aside>
 
-# Conclusion
+# Alternatives
 
-## Results
-
-- Less data used: between 10% and 20% of original response sizes
-- Less connections: only one connection for everything
-- Tailored responses: only get what was asked for
-
-## Alternatives
+##
 
 Before jumping in with GraphQL, we also investigated:
 
 ![](img/graphql/finagle.png){style="height:4.95em;margin-bottom:-0.05em; border-radius: 5px;"} ![](img/graphql/falcor.svg){style="background: black; padding: 10px; border-radius: 5px; height:4.5em;margin-bottom:-0.05em"}
 
 Both had more cons than pros compared to GraphQL
+
 
 ## GraphQL vs Finagle
 
@@ -737,6 +810,14 @@ Both had more cons than pros compared to GraphQL
 - GraphQL is a *specification*, with multiple implementations
 - Falcor is a *JavaScript* server *application*
 
+# Conclusion
+
+## Results
+
+- Less data used: between 10% and 20% of original response sizes
+- Less connections: only one connection for everything
+- Tailored responses: only get what was asked for
+
 
 ## Aftermath
 
@@ -744,10 +825,24 @@ Both had more cons than pros compared to GraphQL
 - Current development app uses the new named queries
 - Investment in the schema enables us to re-use it
 
+<aside class="notes">
+- named queries can be added easily. 
+- Front-end centered, you ask from the service what you need
+    - When data could not be queried, we need to add it to the schema once
+    - after that we can reuse it
+</aside>
+
 ## Future
 
 - Automatic schema generation through documentation
 - Add more BFFs 
+
+<aside class="notes">
+- use service descriptors to automatically create schema's, less work 
+    - no know solutions yet
+- connect website, TV apps, VR ? all get there on BFF
+    
+</aside>
 
 # Questions
 
