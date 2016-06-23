@@ -1,13 +1,15 @@
 % Clockwork meets <br> Codestar at Wehkamp
 % Casper Koning
-% 21 June 2016
+% 23 June 2016
 
 # Wehkamp
 ## No longer the old-fashioned, dull, catalogue
 ![](img/clockwork-meets-codestar/wehkamplabs.png){style="width: 80%"}
 
 ## Ambition to grow, a lot
-
+- E-Commerce is extremely competitive
+- Need to develop features fast
+- Need to be able to scale
 - Platform that supports this ambition
     - Blaze
 - Data driven website
@@ -17,47 +19,25 @@
 ## Next-gen e-commerce platform
 ![](img/clockwork-meets-codestar/wehkamplabs2.png){style="width: 70%"}
 
-
-
 # Blaze
 ## Goals
-![](img/clockwork-meets-codestar/blaze.png){style="width: 75%; float: right"}
+- Little to no coupling between services to allow for quick asynchronous development of new features
+- Resilient to failure, because a single failing component should not prevent a user from having a nice shopping experience
+- Elastic: scale out to more or fewer servers as demand dictates
 
-- Low coupling
-- High Flexibility
-- High cohesion
-- Consistency
-- Reactive, meaning:
-    - Resilient
-    - Elastic
-    - Message-Driven
-    - Responsive
-
-<aside class="notes">
-- Low coupling: prevent unnecessary dependencies.
-- High Flexibility: enable rapid change
-- High cohesion: do one thing and do it well, the single responsibility principle
-- Consistency: things should generally be consistent to limit learning curves
-- Reactive, meaning:
-    - Resilient: the platform is self-healing and should recover from problems with as little manual intervention as possible
-    - Elastic: scaling is built in and should happen automatically based on demand
-    - Message-Driven: inter-service communication is always done in an asynchronous and non-blocking manner
-    - Responsive: consistently fast responses, also in case of errors.
-</aside>
+![](img/clockwork-meets-codestar/blaze.png){style="width: 75%"}
 
 ## How?
 - Microservice architecture
-    - Best architecture to provide previous goals
 - Servers in the cloud
-    - On demand provisioning of new servers
 - Services developed in Scala
-    - Best fit for the relevant frameworks and tools that allow for a microservice architecture
 - Dedicated DevOps teams for end-to-end functionality
     - Teams are fully responsible for their own products, and bear any consequences
     - Leads to high quality products, reliable releases, and the right products through fast experimentation
 
-# Data Platform
-## Team Magenta
+# Team Magenta
+## Data Engineering
+
 Three core products:
 
 - Data platform
@@ -74,11 +54,11 @@ Three core products:
 <center>
 ![](img/clockwork-meets-codestar/kafka.png){style="width: 25%; padding-right: 50px"}
 ![](img/clockwork-meets-codestar/spark.png){style="width: 25%; padding-bottom: 50px"}
-![](img/clockwork-meets-codestar/divolte.png){style="width: 25%; padding-left: 50px"}
+![](img/clockwork-meets-codestar/divolte.png){style="width: 25%; padding-left: 50px; padding-bottom: 25px"}
 </center>
 
 ## Recommendations
-![TODO](img/clockwork-meets-codestar/recommendations-itemitem.png){style="width: 80%"}
+![](img/clockwork-meets-codestar/recommendations.png){style="width: 80%"}
 
 ## Recommendations: AB Testing
 ![](img/clockwork-meets-codestar/recommendations-ab.png){style="width: 60%"}
@@ -87,11 +67,10 @@ Three core products:
 ![](img/clockwork-meets-codestar/ab-result.png){style="width: 80%"}
 
 ## Search
+![](img/clockwork-meets-codestar/visual-search.png){style="width: 50%; float: right"}
+
 - Browse
 - Regular search engine
 - Didyoumean?
 - Typeahead
 - Visual search
-
-## Search: Visual Search
-![](img/clockwork-meets-codestar/visual-search.png){style="width: 80%"}
