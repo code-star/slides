@@ -63,6 +63,9 @@ Three core products:
 ## Recommendations: AB Testing
 ![](img/clockwork-meets-codestar/recommendations-ab.png){style="width: 60%"}
 
+## Legacy
+![](img/clockwork-meets-codestar/legacy.png){style="width:80%"}
+
 ## Recommendations: AB Testing
 ![](img/clockwork-meets-codestar/ab-result.png){style="width: 80%"}
 
