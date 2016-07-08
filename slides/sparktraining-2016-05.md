@@ -23,13 +23,17 @@
     - Python
     - R
 - Integrates with Hadoop ecosystem via YARN
-- Has Mesos interopt
+- Has Mesos interoptability
 - Can also be ran standalone
 
 # Spark Core
 ## Spark architecture model
+- Driver Program creates Tasks for the Workers and schedules them on a Worker
+- Worker is a node in the cluster that runs processes called Executors
+- Executors compute Tasks and communicate with the driver on the progress of said Tasks
+- Cluster Manager takes care of resource allocation, i.e. tells the Driver on which Worker nodes Executors can be spawned
 
-<center>![](img/spark-training/spark-architecture.png){style="width: 75%"}</center>
+<center>![](img/spark-training/spark-architecture.png){style="width: 55%"}</center>
 
 ## The Spark Context
 The first thing a Spark program must do is to create a SparkContext object, which tells Spark how to access a cluster, and functions as the gateway between the driver and the cluster.
@@ -46,10 +50,11 @@ val sc = new SparkContext(sparkConf)
 ## RDDs
 >A Resilient distributed dataset (RDD), is a fault-tolerant collection of elements that can be operated on in parallel.
 
-```
-val dataList = List(1,2,3,4,5)          //On driver
-val dataRDD  = sc.parallelize(dataList) //Parallelized over cluster
-```
+- Distributed:
+    - Data of a single collection is partitioned and computations are done on these partitions in a distributed fashion over multiple Workers.
+- Fault tolerant:
+    - Spark deals with failing machines by re-executing failed or slow Tasks on other Workers
+    - When a partition of an RDD is lost, it will simply be recomputed using the original source. It knows how because of the DAG
 
 ## Creating RDDs
 ```scala
@@ -82,25 +87,11 @@ println("I keep nagging about RDDs in this presentation, to be precise, " +
   "I mention them " + rddCount + " times")
 ```
 
-## Clusterstuff: Fault tolerance
-TODO
-
-## Clusterstuff: Executors
-
-## Clusterstuff: Workers
-TODO
-
-## Clusterstuff: Resource Negotiation
-TODO
-
-## Clusterstuff: Cluster mode vs Client mode
-TODO
-
-## Tasks, Jobs, and Stages
-TODO
-
 ## Caching
-Sometimes you want to reuse an RDD. By default, this leads to a recomputation of the RDD. This is where caching comes in.
+- Sometimes you want to reuse an RDD. By default, this leads to a recomputation of the RDD. This is where caching comes in
+- This supports multiple storage levels (`MEMORY_ONLY`, `MEMORY_AND_DISK`, `DISK_ONLY`, ...)
+- Can also tweak the number of replications of partitions
+
 ```scala
 val rdd = sc.textFile("/path")
 val nextRDD = rdd.map(line => line.toLowerCase)
@@ -246,6 +237,7 @@ class MyReceiver(storageLevel: StorageLevel) extends NetworkReceiver[String](sto
 
 ## Checkpointing
 - Metadata Checkpointing
+![](img/spark-training/streaming-fault-tolerance.png){style="background: white; width: 35%; float:right"}
      - Configuration
      - DStream operations
      - Incomplete batches
@@ -380,12 +372,9 @@ spark-shell --packages com.databricks:spark-csv_2.10:1.4.0
 ![Iris decision tree](img/spark-training/J48_iris.jpg){style="float:right;  width: 35%"}
 
 ## Select the best model
-- Train model with different parameters, compare with some metric
+- Train model with different parameters, compare with some metric ![Model selection](img/spark-training/model-selection.png){style="float: right"}
 - Model might be too complex, or too simple
 - Evaluate model on some validation set and use cross-validation to find an appropriate model
-
-![Model selection](img/spark-training/model-selection.png)
-<!-- FIXME Put image to the right of the text FIXME-->
 
 ## Predict
 ![](img/spark-training/xkcdFlowChart.png)
