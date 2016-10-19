@@ -32,8 +32,9 @@
 - Worker is a node in the cluster that runs processes called Executors
 - Executors compute Tasks and communicate with the driver on the progress of said Tasks
 - Cluster Manager takes care of resource allocation, i.e. tells the Driver on which Worker nodes Executors can be spawned
+- see this [glossary](http://spark.apache.org/docs/latest/cluster-overview.html#glossary) for a recap
 
-<center>![](img/spark-training/spark-architecture.png){style="width: 55%"}</center>
+<center>![](img/spark-training/spark-architecture.png){style="width: 40%"}</center>
 
 ## The Spark Context
 The first thing a Spark program must do is to create a SparkContext object, which tells Spark how to access a cluster, and functions as the gateway between the driver and the cluster.
@@ -61,7 +62,7 @@ val sc = new SparkContext(sparkConf)
 val fromCollectionOnDriver = sc.parallelize(List(1,2,3))
 val fromLocalFileSystem = sc.textFile("/directory/*.txt")
 val fromHdfs = sc.textFile("hdfs:///directory/*.txt")
-val fromS3 = sc.textFile("s3a:///bucket/directory/*.txt")
+val fromS3 = sc.textFile("s3a:///bucket/key-prefix/*.txt")
 val wholeTextFiles = sc.wholeTextFiles("/directory/*.txt")  // returned as filename-file key-value pairs
 val customInputFormat = sc.newAPIHadoopRDD[K, V, F <: InputFormat[K, V]](...)
 ```
@@ -141,9 +142,69 @@ class SampleTest extends FunSuite with SharedSparkContext {
     - Which word is used most?
     - Try leaving out whitespace and the license, how should you approach this?
 - Migrate working pieces of code to a Spark program in your IDE ([template project](https://github.com/CasperKoning/spark-template))
+- Write some tests
 - Assemble your JAR, `sbt clean assembly`
 - Submit your JAR to a local pseudocluster using `spark-submit`
 
+## Spark 2.0
+- Starting from Spark 2.0, a new entrypoint is preferred, this is `SparkSession`, and it is usually used to create a `Dataset` instead of `RDD`
+
+```
+SparkSession.builder()
+     .master("local")
+     .appName("Word Count")
+     .config("spark.some.config.option", "some-value").
+     .getOrCreate()
+```
+
+## Configuring a job
+- Config can be set on `SparkConf` or `SparkSession.builder().config`
+- Config can be passed on as CLI args to `spark-submit` or `spark-shell`
+- Config can be provided with `conf/spark-defaults.conf` file
+- All [available properties](http://spark.apache.org/docs/latest/configuration.html#available-properties)
+
+## Spark standalone cluster
+- Start spark master with `sbin/start-master.sh`, this is the Spark resource manager
+- Start spark slaves with `sbin/start-slave.sh <sparkMaster url>`
+    - see logs after executing `start-master` for proper master url
+- Additionally, you can call `sbin/start-all.sh` from the master node, provided all nodes have the right `conf/spark-env.sh` file and the master has the right `conf/slaves` file
+
+## Execution modes
+- Application can run in both client mode and cluster mode
+- Configurable via `--deploy-mode`
+- During client mode, the driver program runs on the machine submitting the application
+- During cluster mode, the driver program also runs within the cluster
+- Suitable mode depends on your needs, and also the closeness to the cluster of the machine submitting the application
+
+## Monitoring
+- Spark UI
+    - Only during the lifetime of the application
+    - Available on `<driver>:4040`
+- Spark History Server
+    - Uses application logs
+    - Start with `sbin/start-history-server.sh`
+    - Available on `<server>:18080`
+
+## CODE TIME
+- Start up a standalone spark cluster on your machine
+- Submit your previous application to this cluster in cluster mode
+- Monitor your application
+
+## CODE TIME
+- Create a new program, which runs at least the following:
+
+```
+class A
+sc.paralelize(List(new A)).count()
+```
+
+- Change your program to use `SparkSession` instead of `SparkContext`
+- Now, run
+
+```
+class A
+spark.createDataset(List(new A)).count()
+```
 
 # Spark Streaming
 ## Architecture
