@@ -95,8 +95,7 @@ println("I keep nagging about RDDs in this presentation, to be precise, " +
 
 ```scala
 val rdd = sc.textFile("/path")
-val nextRDD = rdd.map(line => line.toLowerCase)
-nextRDD.cache()
+val nextRDD = rdd.map(line => line.toLowerCase).cache()
 println(nextRDD.filter(line => line.startsWith("a")).count())
 println(nextRDD.filter(line => line.startsWith("b")).count())
 ```
