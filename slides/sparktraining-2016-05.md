@@ -236,6 +236,29 @@ When working with DStreams, you construct a pipeline of actions/transformations 
 
 <center>![streaming-dstream-ops](img/spark-training/streaming-dstream-ops.png){style="background: white;"}</center>
 
+
+## Output operations on DStreams [docs](http://spark.apache.org/docs/latest/streaming-programming-guide.html#output-operations-on-dstreams)
+<center>![rtfm](img/spark-training/rtfm.jpg)</center>
+
+## CODE TIME
+Set up a simple Spark Streaming program that echoes a word count for every batch of text it receives, every second.
+
+Provided
+```scala
+$ spark-shell
+val ssc = new StreamingContext(sc, ???)
+val dstream = ssc.socketTextStream("localhost",1234)
+...
+ssc.start()
+ssc.awaitTermination()
+ssc.stop()
+```
+we can (on Linux / OSX) use Netcat, `nc`, to send data:
+```bash
+nc -lk 1234
+hello world
+```
+
 ## Windowing operations on DStreams [docs](http://spark.apache.org/docs/latest/streaming-programming-guide.html#window-operations)
 <center>![streaming-dstream-window](img/spark-training/streaming-dstream-window.png){style="background: white; width: 60%"}</center>
 
@@ -243,8 +266,55 @@ When working with DStreams, you construct a pipeline of actions/transformations 
 - Sliding interval: The interval at which the window operation is performed.
 - These two parameters must be multiples of the batch interval.
 
-## Output operations on DStreams [docs](http://spark.apache.org/docs/latest/streaming-programming-guide.html#output-operations-on-dstreams)
-<center>![rtfm](img/spark-training/rtfm.jpg)</center>
+## CODE TIME
+Change your previous program to aggregate all the words from the previous 10 seconds,
+and output this aggregate every second.
+
+## Fault tolerance
+> A streaming application must operate 24/7 and hence must be resilient to failures unrelated to the application logic. For this to be possible, Spark Streaming needs to *checkpoint* enough information to a fault- tolerant storage system such that it can recover from failures.
+
+## Checkpointing
+- Metadata Checkpointing
+![](img/spark-training/streaming-fault-tolerance.png){style="background: white; width: 35%; float:right"}
+     - Configuration
+     - DStream operations
+     - Incomplete batches
+- Data Checkpointing
+     - Saving of the generated RDDs to reliable storage [...] intermediate RDDs of stateful transformations are periodically checkpointed to reliable storage to cut off the dependency chains.
+
+## Turning on checkpointing
+```scala
+def functionToCreateCtxt(): StreamingContext = {
+    val ssc = new StreamingContext(...)   // new context
+    val lines = ssc.socketTextStream(...) // create DStreams
+    ...
+    ssc.checkpoint(checkpointDir)   // set checkpoint directory
+    ssc
+}
+
+val context = StreamingContext.getOrCreate(checkpointDir, functionToCreateCtxt _)
+
+context.start()
+context.awaitTermination()
+context.stop()
+```
+Create DStreams inside the method: [SPARK-13316](https://issues.apache.org/jira/browse/SPARK-13316)
+
+## Stateful operations
+Two methods of interacting with state for `PairDStreams` (`DStream[(K,V)]`):
+```
+updateStateByKey()
+mapWithState()
+```
+The `mapWithState()` method should be much more [performant](https://databricks.com/blog/2016/02/01/faster-stateful-stream-processing-in-apache-spark-streaming.html),
+and also allows for more complex functionality but can be somewhat harder to implement (imo).
+
+## CODE TIME
+- Change your streaming word count program to actually have state
+- Kill your application during operation, and see if you can get it back up and
+running without loss of state
+
+(You no longer need window operations for this)
 
 ## Receivers
 > Every input DStream (except file stream) is associated with a <strong>Receiver</strong> object which receives the data from a source and stores it in Spark’s memory for processing.
@@ -291,58 +361,6 @@ class MyReceiver(storageLevel: StorageLevel) extends NetworkReceiver[String](sto
     }
 }
 ```
-
-## Fault tolerance
-> A streaming application must operate 24/7 and hence must be resilient to failures unrelated to the application logic. For this to be possible, Spark Streaming needs to *checkpoint* enough information to a fault- tolerant storage system such that it can recover from failures.
-
-## Checkpointing
-- Metadata Checkpointing
-![](img/spark-training/streaming-fault-tolerance.png){style="background: white; width: 35%; float:right"}
-     - Configuration
-     - DStream operations
-     - Incomplete batches
-- Data Checkpointing
-     - Saving of the generated RDDs to reliable storage [...] intermediate RDDs of stateful transformations are periodically checkpointed to reliable storage to cut off the dependency chains.
-
-## Turning on checkpointing
-```scala
-def functionToCreateCtxt(): StreamingContext = {
-    val ssc = new StreamingContext(...)   // new context
-    val lines = ssc.socketTextStream(...) // create DStreams
-    ...
-    ssc.checkpoint(checkpointDir)   // set checkpoint directory
-    ssc
-}
-
-val context = StreamingContext.getOrCreate(checkpointDir, functionToCreateCtxt _)
-context. ...
-context.start()
-context.awaitTermination()
-```
-Create DStreams inside the method: [SPARK-13316](https://issues.apache.org/jira/browse/SPARK-13316)
-
-## CODE TIME
-Set up a simple Spark Streaming program.
-```scala
-$ spark-shell
-val ssc = new StreamingContext(sc, Seconds(2))
-val dstream = ssc.socketTextStream("localhost",1234)
-...
-ssc.start()
-ssc.awaitTermination()
-ssc.stop()
-```
-Linux/OSX: Use Netcat, `nc`, to send data:
-```bash
-nc -lk 1234
-hello world
-```
-
-<!-- Windows: Use Telnet, `telnet`, or download a Netcat alternative, to send data:
-```batch
-telnet localhost 1234
-hello world
-``` -->
 
 # Spark SQL
 
