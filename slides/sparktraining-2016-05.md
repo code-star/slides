@@ -267,8 +267,8 @@ hello world
 - These two parameters must be multiples of the batch interval.
 
 ## CODE TIME
-Change your previous program to aggregate all the words from the previous 10 seconds,
-and output this aggregate every second.
+Change your previous program to aggregate all the words from the previous 5 seconds,
+and output this aggregate every two seconds.
 
 ## Fault tolerance
 > A streaming application must operate 24/7 and hence must be resilient to failures unrelated to the application logic. For this to be possible, Spark Streaming needs to *checkpoint* enough information to a fault- tolerant storage system such that it can recover from failures.
