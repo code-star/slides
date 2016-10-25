@@ -369,8 +369,10 @@ class MyReceiver(storageLevel: StorageLevel) extends NetworkReceiver[String](sto
 
 <center>![spark-sql-architecture](img/spark-training/spark-sql-architecture.png){style="background: white; width: 90%;"}</center>
 
-## Dataframe
+## Dataframe and Dataset
 > A DataFrame is a distributed collection of data organized into named columns. It is conceptually equivalent to a table in a relational database or a data frame in R/Python, but with richer optimizations under the hood.
+
+> A Dataset is a new experimental interface added in Spark 1.6 that tries to provide the benefits of RDDs (strong typing, ability to use powerful lambda functions) with the benefits of Spark SQL’s optimized execution engine.
 
 ## Example
 ```scala
@@ -389,9 +391,15 @@ df.select(avg("age")).show()
 ```
 
 ## Spark SQL operations
-- [DataFrame docs](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.DataFrame), for operations on DataFrames
-- [org.apache.spark.sql.functions](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions), for operations on Columns</li>
-- SQL queries for registered tables: `val df = sqlContext.sql("SELECT * FROM table")`
+- [Dataset docs](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.Dataset), for operations on Datasets
+- [org.apache.spark.sql.functions](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$), for operations on Columns</li>
+- SQL queries for registered tables:
+
+```
+val data = ???
+data.createOrReplaceTempView("table")
+val df = sqlContext.sql("SELECT * FROM table")`
+```
 
 ## Loading and Saving data
 1. Default format is parquet
@@ -407,15 +415,12 @@ df.select(avg("age")).show()
     ```scala
     val jdbcDF = sqlContext.read.format("jdbc").options(
             Map("url" -> "jdbc:postgresql:dbserver",
-              "dbtable" -> "schema.tablename")
+            "dbtable" -> "schema.tablename")
           ).load()
     ```
 
 4. Out of the box Hive with HQL via own DSL
 5. Other datasources via third party plugins
-
-## Dataset
-> A Dataset is a new experimental interface added in Spark 1.6 that tries to provide the benefits of RDDs (strong typing, ability to use powerful lambda functions) with the benefits of Spark SQL’s optimized execution engine.
 
 ## CODE TIME
 Start your spark shell with an aditional package for reading CSV:
