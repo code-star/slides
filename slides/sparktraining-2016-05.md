@@ -533,6 +533,11 @@ val model = DecisionTree.trainClassifier(
 ![](img/spark-training/machineLearningPipeline.png){style="width: 50%"}
 
 ## CODE TIME
+- Provided is an arbitrary dataset
+- Train a regression model for the first variable, with all other variables as independent variables.
+- Evaluate your model!
+
+## CODE TIME
 - 42,000 drawing of digits
 - Given a drawing, predict the written digit
 - Classification problem
