@@ -5,7 +5,7 @@
 
 <title>$title$</title>
 
-<meta name="description" content="$title$">    
+<meta name="description" content="$title$">
 
 $for(author)$
   <meta name="author" content="$author$" />
@@ -40,7 +40,7 @@ $endif$
 <!-- If the query includes 'print-pdf', use the PDF print sheet -->
 <script>
   document.write( '<link rel="stylesheet" href="css/print/' +
-    ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + 
+    ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) +
     '.css" type="text/css" media="print">' );
 </script>
 
@@ -57,17 +57,18 @@ $for(include-before)$
   $include-before$
 $endfor$
 
-<img id="clouds1" src="img/clouds1.png" />
-<img id="clouds2" src="img/clouds2.png" />
-<img id="curves" src="img/curves.svg" />
+<!-- <img id="clouds1" src="img/clouds1.png" /> -->
+<!-- <img id="clouds2" src="img/clouds2.png" /> -->
+<!-- <img id="curves" src="img/curves.svg" /> -->
+<!-- <img id="background" src="img/wehkamp-background.jpeg" /> -->
 
 <div class="reveal">
 
 <!-- Any section element inside of this container is displayed as a slide -->
 <div class="slides">
 
-<div id="logo-background"></div>
-<img id="logo" class="plain logo-still" alt="CODESTAR" src="img/logo-star.svg" />
+<!-- <div id="logo-background"></div> -->
+<!-- <img id="logo" class="plain logo-still" alt="CODESTAR" src="img/logo-star.svg" /> -->
 
 <section style="height: 100%;">
 <h1>$title$</h1>
@@ -76,7 +77,7 @@ $for(author)$<h3>$author$</h3>$endfor$
 <h4>$date$</h4>
 </p>
 <div id="credits">Built by <a href="">Showtime</a></div>
-</section>  
+</section>
 
 <section>
 <h1>Follow along</h1>
@@ -92,7 +93,8 @@ var qrcode = new QRCode(document.getElementById("qrcode"), {
     width: 384,
     height: 384,
     border: 2,
-    colorDark : "#10579E",
+    // colorDark : "#10579E",
+    colorDark: "#F17569",
     colorLight : "#ffffff"
 });
 document.getElementById("qrlink").textContent = url;
@@ -116,21 +118,21 @@ $body$
 <script src="js/reveal.js"></script>
 
 <script>
-  function animateLogo() {
-    var background = document.getElementById("logo-background");
-    var logo = document.getElementById("logo");
-
-    logo.src = "img/logo-animated.svg";
-    logo.className = "plain logo-corner";
-    background.className += " background-fade-out";
-
-    if (document.getElementById("pressSpace"))
-      document.getElementById("pressSpace").parentElement.removeChild(document.getElementById("pressSpace"));
-
-    setTimeout(function() {
-      background.parentElement.removeChild(background);
-    }, 5500);
-  }
+  // function animateLogo() {
+  //   var background = document.getElementById("logo-background");
+  //   var logo = document.getElementById("logo");
+  //
+  //   logo.src = "img/logo-animated.svg";
+  //   logo.className = "plain logo-corner";
+  //   background.className += " background-fade-out";
+  //
+  //   if (document.getElementById("pressSpace"))
+  //     document.getElementById("pressSpace").parentElement.removeChild(document.getElementById("pressSpace"));
+  //
+  //   setTimeout(function() {
+  //     background.parentElement.removeChild(background);
+  //   }, 5500);
+  // }
 
   function initReveal() {
     // Full list of configuration options available here:
@@ -147,9 +149,9 @@ $body$
 
     // available themes are in /css/theme
     $if(theme)$
-      theme: Reveal.getQueryHash().theme || '$theme$', 
+      theme: Reveal.getQueryHash().theme || '$theme$',
     $else$
-      theme: Reveal.getQueryHash().theme || 'default', 
+      theme: Reveal.getQueryHash().theme || 'default',
     $endif$
 
     // default/cube/page/concave/zoom/linear/fade/none

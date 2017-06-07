@@ -73,7 +73,7 @@ def watch(with_templates):
     """
     event_handler = ShowtimeEventHandler()
     observer = Observer()
-    
+
     observer.schedule(event_handler, "slides/")
     if with_templates:
         observer.schedule(event_handler, "templates/")
@@ -123,7 +123,7 @@ def build_file(file):
             "--mathjax",
             "--section-divs",
             "--no-highlight",
-            "--variable", "theme=codestar",
+            "--variable", "theme=wehkamp",
             "--variable", "transition=linear",
             "--toc",
             "--toc-depth", "1",
@@ -151,4 +151,3 @@ class ShowtimeEventHandler(FileSystemEventHandler):
 
 if __name__ == "__main__":
     showtime()
-

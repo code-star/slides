@@ -6,14 +6,16 @@ html * {
  * GLOBAL STYLES
  *********************************************/
 body {
-  background: #10579E;
-  background-color: #10579E; }
+  /*background: #10579E;*/
+  background-image: url("/Users/cko20685/codestar/code/slides/pages/img/wehkamp-background.jpeg");
+  /*background-color: #10579E; */
+}
 
 .reveal {
   font-family: "Conduit", sans-serif;
   font-size: 40px;
   font-weight: normal;
-  color: white; }
+  color: #465363; }
 
 ::selection {
   color: #10579E;
@@ -35,7 +37,7 @@ body {
 .reveal h5,
 .reveal h6 {
   margin: 0;
-  color: white;
+  color: #D7594B;
   font-family: "Conduit", sans-serif;
   font-weight: normal;
   line-height: 1.2;
@@ -46,7 +48,9 @@ body {
 
 .reveal h1 {
   margin-top: -0.14em;
-  font-size: 3.0em; }
+  font-size: 3.0em;
+  /*color: #F17569}*/
+  color: #D7594B}
 
 .reveal h2 {
   font-size: 1.8em; }
@@ -245,7 +249,8 @@ body {
  * LINKS
  *********************************************/
 .reveal a {
-  color: #10579E;
+  /*color: #10579E;*/
+  color: #F17569;
   background: white;
   padding: 5px 5px 0 5px;
   border-radius: 4px;
@@ -286,19 +291,20 @@ body {
  *********************************************/
 .reveal .controls .navigate-left,
 .reveal .controls .navigate-left.enabled {
-  border-right-color: #268bd2; }
+  /*border-right-color: #268bd2; }*/
+  border-right-color: #F17569;}
 
 .reveal .controls .navigate-right,
 .reveal .controls .navigate-right.enabled {
-  border-left-color: #268bd2; }
+  border-left-color: #F17569; }
 
 .reveal .controls .navigate-up,
 .reveal .controls .navigate-up.enabled {
-  border-bottom-color: #268bd2; }
+  border-bottom-color: #F17569; }
 
 .reveal .controls .navigate-down,
 .reveal .controls .navigate-down.enabled {
-  border-top-color: #268bd2; }
+  border-top-color: #F17569; }
 
 .reveal .controls .navigate-left.enabled:hover {
   border-right-color: #78b9e6; }
@@ -319,7 +325,7 @@ body {
   background: rgba(0, 0, 0, 0.2); }
 
 .reveal .progress span {
-  background: #F08300;
+  background: #F17569;
   -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
   -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
   transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }

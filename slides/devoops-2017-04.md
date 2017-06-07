@@ -1,8 +1,19 @@
 % A DEVOOPS STORY: <br> <small> Breaking your entire data platform with a minor version upgrade </small>
 
-# DevOps at Wehkamp
+# About
+![](img/devoops/codestar-logo.png){style="display: block; margin: auto; background:white; width:50%"}
+</br>
+![](img/devoops/wehkamp-logo.png){style="display: block; margin: auto; background:white; width:50%"}
+
+# Dev at Wehkamp
+## Overview
+![](img/devoops/blaze-team-overview.png){style="display: block; margin: auto; width: 60%"}
+
 ## Blaze microservice platform
 ![](img/devoops/stack.png){style="display: block; margin: auto; width: 60%"}
+
+## Data platform
+![](img/devoops/data-platform.png){style="display: block; margin: auto; width: 60%"}
 
 ## Monitoring solutions
 ![](img/devoops/efk.png){style="width:30%"}
@@ -10,11 +21,11 @@
 ![](img/devoops/prometheus.jpg){style="width:25%"}
 
 ## How it fits together:
-![[Cockpit](https://cockpit.nl.wehkamp.blaze.ps/#/?_k=hu8lbi)](img/devoops/cockpit.png){style="width:65%"}
+![[Cockpit](http://url-on-a-private-network)](img/devoops/cockpit.png){style="width:65%"}
 
 # The main character
 ## Kafka and the product-merge
-![](img/devoops/data-flow.png){style="background: white"}
+![](img/devoops/product-merge.png){style="width:30%"}
 
 ## Kafka details
 ![](img/devoops/topic.png){style="float:right"}
@@ -129,7 +140,7 @@ KAFKA-4497 is fixed in the new Kafka (minor) version 0.10.1.1
 
 # Disaster strikes
 ## A wild sold-out product appears!
-![](img/devoops/orders.png){style="width:75%"}
+![](img/devoops/orders2.png){style="width:60%"}
 
 ## Devops tries to diagnose
 ![](img/devoops/effective.png)
