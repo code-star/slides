@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 
 import click
@@ -51,7 +51,7 @@ def new(title):
         )
         with open(destination, "wb") as output_file:
             output_file.write(slides)
-            print "Created: %s" % destination
+            click.echo("Created: %s" % destination)
 
 
 @showtime.command(short_help="Generates an index page listing all slides.")
@@ -73,14 +73,14 @@ def watch(with_templates):
     """
     event_handler = ShowtimeEventHandler()
     observer = Observer()
-    
+
     observer.schedule(event_handler, "slides/")
     if with_templates:
         observer.schedule(event_handler, "templates/")
 
 
     observer.start()
-    print 'Watching for changes in "slides/"%s...' % (' and "templates/page.html"' if with_templates else "")
+    click.echo('Watching for changes in "slides/"%s...' % (' and "templates/page.html"' if with_templates else ""))
     try:
         while True:
             time.sleep(1)
@@ -94,16 +94,16 @@ def generate_index():
     for page in glob.glob("pages/*.html"):
         if page != "pages/index.html":
             with open(page, "rb") as html_file:
-                html = html_file.read()
+                html = html_file.read().decode("utf-8")
                 title = re.search(r"(<title>)(.*?)(</title>)", html).group(2)
                 year, month = page[:-5].split("-")[-2:]
                 items.append((page[6:], year, month, title))
 
-    with open("pages/index.html", "wb") as output:
+    with open("pages/index.html", "w") as output:
         w = output.write
         w("<h1>CODESTAR Slides</h1>\n")
         w("<ul>\n")
-        for page, year, month, title in sorted(items, key=lambda (p, y, m, t): y + m):
+        for page, year, month, title in sorted(items, key=lambda t: t[1] + t[2]):
             w('  <li><a href="%s">[%s/%s] %s</a></li>\n' % (page, month, year, title))
         w("</ul>\n")
 
@@ -131,7 +131,7 @@ def build_file(file):
         ]
 
         subprocess.call(pandoc_command)
-        print "%s: %s" % ("Updated" if updated else "Created", destination)
+        click.echo("%s: %s" % ("Updated" if updated else "Created", destination))
 
 
 class ShowtimeEventHandler(FileSystemEventHandler):
