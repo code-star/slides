@@ -18,7 +18,8 @@
   100% {transform: scale(1.0) translateX(0) translateY(0); stroke-width: 0;}
 }
 .move {
-  transform-origin: 50% 50%;
+  transform-box: fill-box;
+  transform-origin: center;
   stroke: #10579E;
   stroke-linecap: round;
   stroke-width: 0.0%;
@@ -42,7 +43,8 @@
   20% {transform: rotateY(0deg);}
 }
 .rotate{
-  transform-origin: 50% 50%;
+  transform-box: fill-box;
+  transform-origin: center;
   animation-name: rotate360;
   animation-delay: 10s;
   animation-duration: 10s;

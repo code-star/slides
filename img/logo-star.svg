@@ -8,10 +8,12 @@
 .st2{opacity:0.45;}
     .st3{fill:#FFFFFF;opacity:0.0;}
 .move {
-  transform-origin: 50% 50%;
+  transform-box: fill-box;
+  transform-origin: center;
   stroke: #10579E;
   stroke-linecap: round;
-  transform: scale(3.5) translateX(-95%) translateY(-25%); stroke-width: 0.6%;
+  transform: scale(3.5) translateX(-95%) translateY(-25%);
+  stroke-width: 0.6%;
 }
 </style>
 <g transform="translate(35,0)">
