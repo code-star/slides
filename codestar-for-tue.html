@@ -150,7 +150,7 @@ document.getElementById("qrlink").textContent = url;
 <p>Organisations need a consistent approach to deal with these challenges.</p>
 <aside class="notes">
 <ul>
-<li></li>
+<li>Only a few years ago a large application had tens of servers, seconds of response time, hours of offline maintenance and gigabytes of data.</li>
 </ul>
 </aside>
 </section>
@@ -187,6 +187,7 @@ document.getElementById("qrlink").textContent = url;
 </ul>
 <aside class="notes">
 <ul>
+<li>Giving users effective interactive feedback.</li>
 <li>Encourages interaction, simplifies error handling</li>
 </ul>
 </aside>
@@ -199,7 +200,9 @@ document.getElementById("qrlink").textContent = url;
 </ul>
 <aside class="notes">
 <ul>
-<li></li>
+<li>Ideally should be self-recovered</li>
+<li>This requires component isolation and containment of failures</li>
+<li>To avoid failures spreading to neighbouring components—resulting catastrophic, cascading failure scenarios</li>
 </ul>
 </aside>
 </section>
@@ -211,7 +214,8 @@ document.getElementById("qrlink").textContent = url;
 </ul>
 <aside class="notes">
 <ul>
-<li></li>
+<li>Elasticity is about responsiveness under load</li>
+<li>Take advantage of the promises of cloud computing: allowing systems to be resource efficient, cost-efficient, environment-friendly etc</li>
 </ul>
 </aside>
 </section>
@@ -220,14 +224,14 @@ document.getElementById("qrlink").textContent = url;
 <ul>
 <li>What makes the reactive systems unique</li>
 <li>In-system communication via asynchronous message-passing</li>
-<li>Non-blocking communication</li>
 </ul>
 <p>It ensures loose coupling and establish boundaries between components.</p>
 <aside class="notes">
 <ul>
 <li>Responsiveness, resilience, elasticity are standard nowdays</li>
 <li>Relies on interactions via asynchronous message-passing that estalish boundaries</li>
-<li></li>
+<li>Communication in non-blocking manner</li>
+<li>Boundaries, Location Transparency (topology is not static anymore)</li>
 </ul>
 </aside>
 </section>
@@ -246,18 +250,6 @@ document.getElementById("qrlink").textContent = url;
 <section id="architecture" class="level2">
 <h2>Architecture</h2>
 <p><img src="img/pronto-overview.svg" /></p>
-</section>
-<section id="tech-stack" class="level2">
-<h2>Tech-stack</h2>
-<ul>
-<li>Host: Heroku</li>
-<li>CI: CircleCI</li>
-<li>Messaging: Apache Kafka &amp; RabbitMQ</li>
-<li>DB: PostgresQL</li>
-<li>Monitoring: Logz.io (ELK), PagerDuty, Grafana</li>
-<li>Backend: Scala, Akka, Play Framework</li>
-<li>Frontend: React and Redux</li>
-</ul>
 </section>
 </section>
 <section id="pronto-as-a-reactive-system" class="level1">
@@ -291,7 +283,7 @@ document.getElementById("qrlink").textContent = url;
 <section id="elastic-1" class="level2">
 <h2>Elastic</h2>
 <ul>
-<li>Messages queues in RabbitMQ</li>
+<li>Partially ensured by the messaging systems (Kafka or RabbitMQ)</li>
 <li>Collection of metrics helps in resources allocation</li>
 <li>Burst performance via Heroku</li>
 </ul>
@@ -304,8 +296,8 @@ document.getElementById("qrlink").textContent = url;
 <section id="challenges" class="level2">
 <h2>Challenges</h2>
 <ul>
-<li>Master-data distribution</li>
-<li>Monitoring</li>
+<li>Master-data distribution <br/> Solution: Kafka-topics with data updates</li>
+<li>Monitoring <br/> Solution: collection of logs and metrics and its visualisation by ELK and Grafana</li>
 </ul>
 </section>
 </section>
