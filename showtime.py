@@ -42,14 +42,14 @@ def new(title):
     sanitized = re.sub(r"[^(a-z0-9) ]", "", title.lower()).replace(" ", "-")
     destination = "slides/%s-%d-%02d.md" % (sanitized, now.year, now.month)
 
-    with open("templates/slides.md", "rb") as template_file:
+    with open("templates/slides.md", "r") as template_file:
         template = template_file.read()
         slides = template.format(
             title = title,
             destination = destination,
             date = now.strftime("%d %B %Y"),
         )
-        with open(destination, "wb") as output_file:
+        with open(destination, "w") as output_file:
             output_file.write(slides)
             click.echo("Created: %s" % destination)
 
